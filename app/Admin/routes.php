@@ -23,4 +23,6 @@ Route::group([
     $router->resource('integrals', IntegralController::class);
     // 订单
     $router->resource('orders', OrderController::class);
+    // 问题
+    $router->resource('questions', QuestionController::class);
 });
