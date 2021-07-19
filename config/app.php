@@ -176,6 +176,9 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
+        // Passport
+        Laravel\Passport\PassportServiceProvider::class,
     ],
 
     /*

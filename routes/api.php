@@ -78,3 +78,12 @@ Route::group(["prefix" => "article"], function () {
     Route::post("list", [ArticleController::class, "list"]);
     Route::post("details", [ArticleController::class, "details"]);
 });
+
+Route::get("/error", function() {
+    return response()->json("Unauthorized", 401);
+})->name("login");
+Route::post('/login', [UserController::class, "login"]);
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('info', [UserController::class, "details"]);
+    Route::post('logout', [UserController::class, "logout"]);
+});

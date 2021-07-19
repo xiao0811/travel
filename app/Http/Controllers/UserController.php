@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -11,27 +13,39 @@ class UserController extends Controller
     // login 用户登录
     public function login(Request $request)
     {
-
-    }
-
-    public function create(Request $request)
-    {
         $validator = Validator::make($request->post(), [
-            "username" => "required",
-            "phone"    => "required|unique:users"
+            "wechat" => "required",
+            // "phone"  => "required|unique:users"
         ]);
 
         if ($validator->fails()) {
             return $this->returnJson($validator->errors()->first(), 400);
         }
 
-        if (!User::query()->create($request->post())) {
-            return $this->returnJson("用户创建失败",500);
-        }
-
-        return $this->returnSuccess($request->post());
+        $user = User::query()->firstOrCreate(["wechat" => $request->post("wechat")]);
+        $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
+        $data = ["user"  => $user, "token" => $token];
+        return $this->returnSuccess($data);
     }
-    
+
+    // public function create(Request $request)
+    // {
+    //     $validator = Validator::make($request->post(), [
+    //         "username" => "required",
+    //         "phone"    => "required|unique:users"
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return $this->returnJson($validator->errors()->first(), 400);
+    //     }
+
+    //     if (!User::query()->create($request->post())) {
+    //         return $this->returnJson("用户创建失败", 500);
+    //     }
+
+    //     return $this->returnSuccess($request->post());
+    // }
+
     public function update(Request $request)
     {
         $validator = Validator::make($request->post(), [
@@ -44,12 +58,12 @@ class UserController extends Controller
 
         $member = User::query()->find($request->post("id"));
         if (!$member->update($request->post())) {
-            return $this->returnJson("用户更新失败",500);
+            return $this->returnJson("用户更新失败", 500);
         }
 
         return $this->returnSuccess($member);
     }
-    
+
     public function delete(Request $request)
     {
         $validator = Validator::make($request->post(), [
@@ -64,12 +78,12 @@ class UserController extends Controller
 
         $member->status = 10;
         if (!$member->save()) {
-            return $this->returnJson("用户删除失败",500);
+            return $this->returnJson("用户删除失败", 500);
         }
 
         return $this->returnSuccess($member);
     }
-    
+
     public function list(Request $request)
     {
         $members = User::query();
@@ -98,18 +112,18 @@ class UserController extends Controller
         $limit = $request->post("limit", 20);
         return $this->returnSuccess($members->paginate($limit));
     }
-    
+
     public function details(Request $request)
     {
-        $validator = Validator::make($request->post(), [
-            "id" => "required|exists:members,id",
+        return response()->json(['user' => Auth::user()]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'message' => 'Successfully logged out'
         ]);
-
-        if ($validator->fails()) {
-            return $this->returnJson($validator->errors()->first(), 400);
-        }
-
-        $member = User::query()->find($request->post("id"));
-        return $this->returnSuccess($member);
     }
 }

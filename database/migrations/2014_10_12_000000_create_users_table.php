@@ -16,14 +16,14 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->nullable();
-            $table->string('password');
+            // $table->string('password');
             $table->rememberToken();
             $table->string("username")->nullable()->comment("用户信息");
             $table->string("wechat")->nullable()->comment("微信标识");
             $table->string("real_name")->nullable()->comment("真实名称");
             $table->string("integral")->default(0)->comment("用户积分");
             $table->string("id_card")->nullable()->comment("身份证号码");
-            $table->char("phone", 11)->unique()->comment("手机号码");
+            $table->char("phone", 11)->nullable()->comment("手机号码");
             $table->string("avatar")->nullable()->comment("头像");
             $table->unsignedTinyInteger("status")->default(1)->comment("用户状态: 1: 正常, 10: 注销");
             $table->unsignedTinyInteger("type")->default(1)->comment("用户类型 1: 普通用户 2: 管理员");
