@@ -14,7 +14,6 @@ class UserController extends Controller
 
     }
 
-    
     public function create(Request $request)
     {
         $validator = Validator::make($request->post(), [
@@ -50,7 +49,6 @@ class UserController extends Controller
 
         return $this->returnSuccess($member);
     }
-
     
     public function delete(Request $request)
     {
@@ -71,7 +69,6 @@ class UserController extends Controller
 
         return $this->returnSuccess($member);
     }
-
     
     public function list(Request $request)
     {
@@ -101,7 +98,6 @@ class UserController extends Controller
         $limit = $request->post("limit", 20);
         return $this->returnSuccess($members->paginate($limit));
     }
-
     
     public function details(Request $request)
     {

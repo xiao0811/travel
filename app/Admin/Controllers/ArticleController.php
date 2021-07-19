@@ -81,8 +81,17 @@ class ArticleController extends AdminController
         $form->text('subtitle', __('副标题'));
         $form->textarea('content', __('内容'));
         $form->text('author', __('作者'));
-        $form->number('status', __('状态'));
-        $form->number('type', __('分类'))->default(1);
+        // $form->number('status', __('状态'));
+        $form->radio('status', __('状态'))->options([
+            '1' => '显示',
+            '2' => '隐藏'
+        ])->default(1);
+        // $form->number('type', __('分类'))->default(1);
+        $form->select('type', __('分类'))->options([
+            '1' => '国内',
+            '2' => '国外',
+            "3" => "骁傻",
+        ])->default(1);
         $form->number('sort', __('Sort'));
 
         return $form;

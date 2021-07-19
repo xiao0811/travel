@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->post(), [
-            "user_id" => "required|exists:users,id",
+            "user_id"   => "required|exists:users,id",
             "number"    => "required",
             "goods_id"  => "required|exists:goods,id"
         ]);
