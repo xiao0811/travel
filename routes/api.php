@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoodsController;
 use App\Http\Controllers\IntegralController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SignInController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,14 +25,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post("/test/json", [TestController::class, "index"]);
-
 Route::get("/error", function () {
     return response()->json("Unauthorized", 401);
 })->name("login");
 
 Route::post('/login', [UserController::class, "login"]);
 Route::group(['middleware' => 'auth:api'], function () {
+    // 签到
+    Route::post('signIn', [SignInController::class, "signIn"]);
     Route::post('info', [UserController::class, "details"]);
     Route::post('logout', [UserController::class, "logout"]);
 
@@ -82,3 +82,5 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("get", [ArticleController::class, "randOne"]);
     });
 });
+
+Route::get("/test", [TestController::class, "test"]);

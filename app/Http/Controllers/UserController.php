@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Wechat\WXBizDataCrypt;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,19 +14,31 @@ class UserController extends Controller
     // login 用户登录
     public function login(Request $request)
     {
-        $validator = Validator::make($request->post(), [
-            "wechat" => "required",
-            // "phone"  => "required|unique:users"
-        ]);
+        $pc = new WXBizDataCrypt(env("WECHATAPPID"), $request->post("sessionKey"));
+        $errCode = $pc->decryptData(
+            $request->post("encryptedData"),
+            $request->post("iv"),
+            $request->post("data")
+        );
 
-        if ($validator->fails()) {
-            return $this->returnJson($validator->errors()->first(), 400);
+        if ($errCode == 0) {
+            print($request->post("data") . "\n");
+        } else {
+            print($errCode . "\n");
         }
+        // $validator = Validator::make($request->post(), [
+        //     "wechat" => "required",
+        //     // "phone"  => "required|unique:users"
+        // ]);
 
-        $user = User::query()->firstOrCreate(["wechat" => $request->post("wechat")]);
-        $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
-        $data = ["user"  => $user, "token" => $token];
-        return $this->returnSuccess($data);
+        // if ($validator->fails()) {
+        //     return $this->returnJson($validator->errors()->first(), 400);
+        // }
+
+        // $user = User::query()->firstOrCreate(["wechat" => $request->post("wechat")]);
+        // $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
+        // $data = ["user"  => $user, "token" => $token];
+        // return $this->returnSuccess($data);
     }
 
     // public function create(Request $request)

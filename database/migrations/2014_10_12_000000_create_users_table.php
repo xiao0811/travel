@@ -40,10 +40,12 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger("quantity")->comment("商品数量");
             $table->string("images")->nullable()->comment("商品图片");
             $table->text("details")->nullable()->comment("商品详情");
+            $table->date("valid_period")->nullable()->comment("有效期");
+            $table->unsignedTinyInteger("max")->nullable()->comment("最大购买");
             $table->unsignedTinyInteger("type")->default(1)->comment("商品分类");
             $table->unsignedTinyInteger("status")->default(1)->comment("商品状态 1: 正常在售 10: 下架");
             $table->boolean("recommend")->default(false)->comment("是否推荐");
-            $table->unsignedInteger("sold")->default(0)->comment("已卖数量");
+            $table->unsignedInteger("sold")->nullable()->comment("已卖数量");
             $table->string("remark")->nullable()->comment("备注");
             $table->timestamps();
         });
@@ -70,10 +72,11 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->unsignedInteger("user_id")->comment("用户ID");
             $table->unsignedTinyInteger("type")->default(1)->comment("类型");
-            $table->unsignedInteger("quantity")->default(0)->comment("数量");
+            $table->integer("quantity")->default(0)->comment("数量");
             $table->unsignedInteger("order_id")->nullable()->comment("订单ID");
             $table->unsignedInteger("interactor")->nullable()->comment("收入/支出对象");
             $table->unsignedTinyInteger("status")->default(1)->comment("状态");
+            $table->string("remark")->nullable()->comment("备注");
             $table->timestamps();
         });
 
