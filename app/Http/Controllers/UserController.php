@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Wechat\WXBizDataCrypt;
-use GrahamCampbell\ResultType\Success;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -14,31 +15,29 @@ class UserController extends Controller
     // login 用户登录
     public function login(Request $request)
     {
-        $pc = new WXBizDataCrypt(env("WECHATAPPID"), $request->post("sessionKey"));
-        $errCode = $pc->decryptData(
-            $request->post("encryptedData"),
-            $request->post("iv"),
-            $request->post("data")
-        );
+        $validator = Validator::make($request->post(), [
+            "wechat" => "required",
+        ]);
 
-        if ($errCode == 0) {
-            print($request->post("data") . "\n");
-        } else {
-            print($errCode . "\n");
+        if ($validator->fails()) {
+            return $this->returnJson($validator->errors()->first(), 400);
         }
-        // $validator = Validator::make($request->post(), [
-        //     "wechat" => "required",
-        //     // "phone"  => "required|unique:users"
-        // ]);
 
-        // if ($validator->fails()) {
-        //     return $this->returnJson($validator->errors()->first(), 400);
-        // }
+        $url = "https://api.weixin.qq.com/sns/jscode2session?" .
+            "appid=" . env("WECHATAPPID") .
+            "&secret=" . env("WECHATSECRET") .
+            "&js_code=" . $request->post("wechat") .
+            "&grant_type=authorization_code";
 
-        // $user = User::query()->firstOrCreate(["wechat" => $request->post("wechat")]);
-        // $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
-        // $data = ["user"  => $user, "token" => $token];
-        // return $this->returnSuccess($data);
+        $client = new Client();
+        $res = $client->get($url);
+        $content = $res->getBody()->getContents();
+        $w = json_decode($content);
+
+        $user = User::query()->firstOrCreate(["wechat" => $w["openid"]]);
+        $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
+        $data = ["user"  => $user, "token" => $token];
+        return $this->returnSuccess($data);
     }
 
     // public function create(Request $request)
@@ -138,5 +137,20 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    public function create(Request $request)
+    {
+        $validator = Validator::make($request->post(), [
+            "id" => "required|exists:members,id",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnJson($validator->errors()->first(), 400);
+        }
+
+        $user = User::query()->find($request->post("id"));
+        $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
+        $data = ["user"  => $user, "token" => $token];
     }
 }

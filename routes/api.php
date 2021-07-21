@@ -30,12 +30,13 @@ Route::get("/error", function () {
 })->name("login");
 
 Route::post('/login', [UserController::class, "login"]);
+Route::post("sign", [UserController::class, "create"]);
+
 Route::group(['middleware' => 'auth:api'], function () {
     // 签到
     Route::post('signIn', [SignInController::class, "signIn"]);
     Route::post('info', [UserController::class, "details"]);
     Route::post('logout', [UserController::class, "logout"]);
-
 
     // 商品
     Route::group(["prefix" => "goods"], function () {

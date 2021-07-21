@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string("username")->nullable()->comment("用户信息");
             $table->string("wechat")->nullable()->comment("微信标识");
             $table->string("real_name")->nullable()->comment("真实名称");
-            $table->string("integral")->default(0)->comment("用户积分");
+            $table->unsignedInteger("integral")->default(0)->comment("用户积分");
             $table->string("id_card")->nullable()->comment("身份证号码");
             $table->char("phone", 11)->nullable()->comment("手机号码");
             $table->string("avatar")->nullable()->comment("头像");

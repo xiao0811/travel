@@ -32,7 +32,7 @@ class SignInController extends Controller
             DB::rollBack();
             return $this->returnJson("签到失败", 500);
         }
-
+        DB::commit();
         return $this->returnSuccess($integral);
     }
 }
