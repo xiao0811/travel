@@ -16,6 +16,16 @@ class Article extends Model
         "author",
         "status",
         "type",
-        "sort"
+        "sort",
+        "thumbnail",
     ];
+
+    public function getType()
+    {
+        return [
+            1 => "国内资讯",
+            2 => "安徽资讯",
+            3 => "合肥资讯",
+        ];
+    }
 }

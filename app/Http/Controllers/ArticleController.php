@@ -89,4 +89,10 @@ class ArticleController extends Controller
 
         return $this->returnSuccess($article);
     }
+
+    public function getType(Request $request)
+    {
+        $a = new Article();
+        return $this->returnSuccess($a->getType());
+    }
 }

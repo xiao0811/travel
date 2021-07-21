@@ -85,6 +85,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string("title")->comment("标题");
             $table->string("subtitle")->nullable()->comment("副标题");
+            $table->string("thumbnail")->nullable()->comment("封面");
             $table->text("content")->nullable()->comment("内容");
             $table->unsignedInteger("author")->nullable()->comment("作者ID");
             $table->unsignedTinyInteger("status")->nullable()->comment("状态");

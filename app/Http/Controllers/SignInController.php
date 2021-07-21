@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Integral;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isEmpty;
 
 class SignInController extends Controller
 {
@@ -17,7 +20,16 @@ class SignInController extends Controller
         if ($request->has("id")) {
             $user = User::query()->find($request->post("id"));
         }
-       
+
+        $i = Integral::query()->where([
+            "user_id" => $user->id,
+            "type"    => 1,
+        ])->whereDate('created_at', Carbon::now()->format("Y-m-d"))->first();
+
+        if (!isEmpty($i)){
+            return $this->returnJson("今天已签到", 400);
+        }
+
         $integral = new Integral();
 
         $integral->user_id = $user->id();
