@@ -27,17 +27,17 @@ class OrderController extends AdminController
         $grid = new Grid(new Order());
 
         $grid->column('id', __('Id'));
-        $grid->column('order_number', __('Order number'));
-        $grid->column('member_id', __('Member id'));
-        $grid->column('goods_id', __('Goods id'));
-        $grid->column('number', __('Number'));
-        $grid->column('address', __('Address'));
-        $grid->column('name', __('Name'));
-        $grid->column('phone', __('Phone'));
-        $grid->column('status', __('Status'));
-        $grid->column('express', __('Express'));
-        $grid->column('express_number', __('Express number'));
-        $grid->column('remark', __('Remark'));
+        $grid->column('order_number', __('订单编号'));
+        $grid->column('member_id', __('用户ID'));
+        $grid->column('goods_id', __('商品ID'));
+        $grid->column('number', __('商品数量'));
+        $grid->column('address', __('收货人地址'));
+        $grid->column('name', __('收货人名字'));
+        $grid->column('phone', __('收货人手机号码'));
+        $grid->column('status', __('状态'));
+        $grid->column('express', __('快递公司'));
+        $grid->column('express_number', __('快递单号'));
+        $grid->column('remark', __('备注'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -55,17 +55,17 @@ class OrderController extends AdminController
         $show = new Show(Order::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('order_number', __('Order number'));
-        $show->field('member_id', __('Member id'));
-        $show->field('goods_id', __('Goods id'));
-        $show->field('number', __('Number'));
-        $show->field('address', __('Address'));
-        $show->field('name', __('Name'));
-        $show->field('phone', __('Phone'));
-        $show->field('status', __('Status'));
-        $show->field('express', __('Express'));
-        $show->field('express_number', __('Express number'));
-        $show->field('remark', __('Remark'));
+        $show->field('order_number', __('订单编号'));
+        $show->field('member_id', __('用户ID'));
+        $show->field('goods_id', __('商品ID'));
+        $show->field('number', __('商品数量'));
+        $show->field('address', __('收货人地址'));
+        $show->field('name', __('收货人名字'));
+        $show->field('phone', __('收货人手机号码'));
+        $show->field('status', __('状态'));
+        $show->field('express', __('快递公司'));
+        $show->field('express_number', __('快递单号'));
+        $show->field('remark', __('备注'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -81,17 +81,17 @@ class OrderController extends AdminController
     {
         $form = new Form(new Order());
 
-        $form->text('order_number', __('Order number'));
-        $form->number('member_id', __('Member id'));
-        $form->number('goods_id', __('Goods id'));
-        $form->number('number', __('Number'))->default(1);
-        $form->text('address', __('Address'));
-        $form->text('name', __('Name'));
-        $form->mobile('phone', __('Phone'));
-        $form->switch('status', __('Status'))->default(1);
-        $form->text('express', __('Express'));
-        $form->text('express_number', __('Express number'));
-        $form->text('remark', __('Remark'));
+        $form->text('order_number', __('订单编号'));
+        $form->number('member_id', __('用户ID'));
+        $form->number('goods_id', __('商品ID'));
+        $form->number('number', __('商品数量'))->default(1);
+        $form->text('address', __('收货人地址'));
+        $form->text('name', __('收货人名字'));
+        $form->mobile('phone', __('收货人手机号码'));
+        $form->switch('status', __('状态'))->default(1);
+        $form->text('express', __('快递公司'));
+        $form->text('express_number', __('快递单号'));
+        $form->text('remark', __('备注'));
 
         return $form;
     }

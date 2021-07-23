@@ -26,21 +26,21 @@ class GoodsController extends AdminController
     {
         $grid = new Grid(new Goods());
 
-        $grid->column('id', __('Id'));
-        $grid->column('name', __('Name'));
-        $grid->column('number', __('Number'));
-        $grid->column('price', __('Price'));
-        $grid->column('integral', __('Integral'));
-        $grid->column('quantity', __('Quantity'));
-        $grid->column('images', __('Images'));
-        $grid->column('details', __('Details'));
-        $grid->column('type', __('Type'));
-        $grid->column('status', __('Status'));
-        $grid->column('recommend', __('Recommend'));
-        $grid->column('sold', __('Sold'));
-        $grid->column('remark', __('Remark'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        // $grid->column('id', __('Id'));
+        $grid->column('name', __('商品名称'));
+        $grid->column('number', __('商品编号'));
+        $grid->column('price', __('价格'));
+        $grid->column('integral', __('积分'));
+        $grid->column('quantity', __('库存'));
+        // $grid->column('images', __('Images'));
+        // $grid->column('details', __('Details'));
+        $grid->column('type', __('分类'));
+        $grid->column('status', __('状态'));
+        $grid->column('recommend', __('推荐'));
+        $grid->column('sold', __('总售量'));
+        // $grid->column('remark', __('Remark'));
+        // $grid->column('created_at', __('Created at'));
+        // $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }
@@ -56,18 +56,18 @@ class GoodsController extends AdminController
         $show = new Show(Goods::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('name', __('Name'));
-        $show->field('number', __('Number'));
-        $show->field('price', __('Price'));
-        $show->field('integral', __('Integral'));
-        $show->field('quantity', __('Quantity'));
-        $show->field('images', __('Images'));
-        $show->field('details', __('Details'));
-        $show->field('type', __('Type'));
-        $show->field('status', __('Status'));
-        $show->field('recommend', __('Recommend'));
-        $show->field('sold', __('Sold'));
-        $show->field('remark', __('Remark'));
+        $show->field('name', __('商品名称'));
+        $show->field('number', __('商品编号'));
+        $show->field('price', __('价格'));
+        $show->field('integral', __('积分'));
+        $show->field('quantity', __('商品数量'));
+        $show->field('images', __('商品图片'));
+        $show->field('details', __('商品详情'));
+        $show->field('type', __('分类'));
+        $show->field('status', __('状态'));
+        $show->field('recommend', __('是否推荐'));
+        $show->field('sold', __('总销量'));
+        $show->field('remark', __('备注'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -83,18 +83,18 @@ class GoodsController extends AdminController
     {
         $form = new Form(new Goods());
 
-        $form->text('name', __('Name'));
-        $form->text('number', __('Number'));
-        $form->decimal('price', __('Price'));
-        $form->number('integral', __('Integral'));
-        $form->number('quantity', __('Quantity'));
-        $form->text('images', __('Images'));
-        $form->textarea('details', __('Details'));
-        $form->switch('type', __('Type'))->default(1);
-        $form->switch('status', __('Status'))->default(1);
-        $form->switch('recommend', __('Recommend'));
-        $form->number('sold', __('Sold'));
-        $form->text('remark', __('Remark'));
+        $form->text('name', __('商品名称'));
+        $form->text('number', __('商品编号'));
+        $form->decimal('price', __('价格'));
+        $form->number('integral', __('积分'));
+        $form->number('quantity', __('商品数量'));
+        $form->text('images', __('商品图片'));
+        $form->textarea('details', __('商品详情'));
+        $form->switch('type', __('分类'))->default(1);
+        $form->switch('status', __('状态'))->default(1);
+        $form->switch('recommend', __('是否推荐'));
+        $form->number('sold', __('总销量'));
+        $form->text('remark', __('备注'));
 
         return $form;
     }

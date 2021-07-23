@@ -27,14 +27,14 @@ class IntegralController extends AdminController
         $grid = new Grid(new Integral());
 
         $grid->column('id', __('Id'));
-        $grid->column('user_id', __('User id'));
-        $grid->column('type', __('Type'));
-        $grid->column('quantity', __('Quantity'));
-        $grid->column('order_id', __('Order id'));
-        $grid->column('interactor', __('Interactor'));
-        $grid->column('status', __('Status'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('user_id', __('用户ID'));
+        $grid->column('type', __('类型'));
+        $grid->column('quantity', __('数量'));
+        $grid->column('order_id', __('相关订单'));
+        $grid->column('interactor', __('收入/支出对象'));
+        $grid->column('status', __('状态'));
+        // $grid->column('created_at', __('Created at'));
+        // $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }
@@ -50,12 +50,12 @@ class IntegralController extends AdminController
         $show = new Show(Integral::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('user_id', __('User id'));
-        $show->field('type', __('Type'));
-        $show->field('quantity', __('Quantity'));
-        $show->field('order_id', __('Order id'));
-        $show->field('interactor', __('Interactor'));
-        $show->field('status', __('Status'));
+        $show->field('user_id', __('用户ID'));
+        $show->field('type', __('类型'));
+        $show->field('quantity', __('数量'));
+        $show->field('order_id', __('相关订单'));
+        $show->field('interactor', __('收入/支出对象'));
+        $show->field('status', __('状态'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -71,12 +71,12 @@ class IntegralController extends AdminController
     {
         $form = new Form(new Integral());
 
-        $form->number('user_id', __('User id'));
-        $form->switch('type', __('Type'))->default(1);
-        $form->number('quantity', __('Quantity'));
-        $form->number('order_id', __('Order id'));
-        $form->number('interactor', __('Interactor'));
-        $form->switch('status', __('Status'))->default(1);
+        $form->number('user_id', __('用户ID'));
+        $form->switch('type', __('类型'))->default(1);
+        $form->number('quantity', __('数量'));
+        $form->number('order_id', __('相关订单'));
+        $form->number('interactor', __('收入/支出对象'));
+        $form->switch('status', __('状态'))->default(1);
 
         return $form;
     }
