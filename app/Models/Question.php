@@ -19,4 +19,6 @@ class Question extends Model
         "status",
         "type",
     ];
+
+    protected $dateFormat = 'Y-m-d H:i:s';
 }

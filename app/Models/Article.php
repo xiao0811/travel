@@ -20,6 +20,8 @@ class Article extends Model
         "thumbnail",
     ];
 
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     public function getType()
     {
         return [

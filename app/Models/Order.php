@@ -20,4 +20,6 @@ class Order extends Model
         "express",
         "express_number"
     ];
+
+    protected $dateFormat = 'Y-m-d H:i:s';
 }

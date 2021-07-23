@@ -34,7 +34,7 @@ class UserController extends Controller
         $content = $res->getBody()->getContents();
         $w = json_decode($content);
 
-        $user = User::query()->firstOrCreate(["wechat" => $w["openid"]]);
+        $user = User::query()->firstOrCreate(["wechat" => $w->openid]);
         $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
         $data = ["user"  => $user, "token" => $token];
         return $this->returnSuccess($data);

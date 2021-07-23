@@ -30,6 +30,8 @@ class User extends Authenticatable
         "type"
     ];
 
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -48,5 +50,4 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
 }

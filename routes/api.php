@@ -35,6 +35,8 @@ Route::post("sign", [UserController::class, "create"]);
 Route::group(['middleware' => 'auth:api'], function () {
     // 签到
     Route::post('signIn', [SignInController::class, "signIn"]);
+    Route::post("get_signIn", [SignInController::class, "getSignIn"]);
+
     Route::post('info', [UserController::class, "details"]);
     Route::post('logout', [UserController::class, "logout"]);
 

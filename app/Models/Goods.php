@@ -22,4 +22,6 @@ class Goods extends Model
         "recommend",
         "sold",
     ];
+
+    protected $dateFormat = 'Y-m-d H:i:s';
 }

@@ -17,4 +17,6 @@ class Integral extends Model
         "interactor",
         "status"
     ];
+
+    protected $dateFormat = 'Y-m-d H:i:s';
 }

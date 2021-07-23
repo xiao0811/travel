@@ -17,22 +17,19 @@ class SignInController extends Controller
     public function signIn(Request $request)
     {
         $user = Auth::user();
-        if ($request->has("id")) {
-            $user = User::query()->find($request->post("id"));
-        }
 
         $i = Integral::query()->where([
             "user_id" => $user->id,
             "type"    => 1,
         ])->whereDate('created_at', Carbon::now()->format("Y-m-d"))->first();
 
-        if (!isEmpty($i)){
+        if (!isEmpty($i)) {
             return $this->returnJson("今天已签到", 400);
         }
 
         $integral = new Integral();
 
-        $integral->user_id = $user->id();
+        $integral->user_id = $user->id;
         $integral->type = 1;
         $integral->quantity = 5;
         $integral->interactor = 0;
@@ -46,5 +43,14 @@ class SignInController extends Controller
         }
         DB::commit();
         return $this->returnSuccess($integral);
+    }
+
+    public function getSignIn(Request $request)
+    {
+        $user = Auth::user();
+        $integrals = Integral::query()->where("member_id", $user->id)
+            ->orderBy("created_at", "DESC")->limit(7)->get();
+            
+        return $this->returnSuccess($integrals);
     }
 }
