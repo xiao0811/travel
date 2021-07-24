@@ -25,4 +25,6 @@ Route::group([
     $router->resource('orders', OrderController::class);
     // 问题
     $router->resource('questions', QuestionController::class);
+    // 碳减排
+    $router->resource('emissions', EmissionController::class);
 });
