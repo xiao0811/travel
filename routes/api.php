@@ -70,6 +70,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("create", [IntegralController::class, "create"]);
         Route::post("list", [IntegralController::class, "list"]);
         Route::post("details", [IntegralController::class, "details"]);
+        Route::post("/month", [IntegralController::class, "month"]);
     });
 
     // article / Article 文章

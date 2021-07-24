@@ -45,12 +45,13 @@ class SignInController extends Controller
         return $this->returnSuccess($integral);
     }
 
-    public function getSignIn(Request $request)
+    public function month(Request $request)
     {
         $user = Auth::user();
         $integrals = Integral::query()->where("member_id", $user->id)
-            ->orderBy("created_at", "DESC")->limit(7)->get();
-            
+            ->whereDate("created_at", Carbon::now()->format("Y-m"))
+            ->orderBy("created_at")->get();
+
         return $this->returnSuccess($integrals);
     }
 }
