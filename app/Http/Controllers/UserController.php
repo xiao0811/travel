@@ -127,7 +127,7 @@ class UserController extends Controller
 
     public function details(Request $request)
     {
-        return response()->json(['user' => Auth::user()]);
+        return $this->returnSuccess(Auth::user());
     }
 
     public function logout(Request $request)

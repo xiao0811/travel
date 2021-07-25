@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Integral;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -21,9 +20,9 @@ class SignInController extends Controller
         $i = Integral::query()->where([
             "user_id" => $user->id,
             "type"    => 1,
-        ])->whereDate('created_at', Carbon::now()->format("Y-m-d"))->first();
+        ])->whereDate('created_at', Carbon::now()->format("Y-m-d"))->get();
 
-        if (!isEmpty($i)) {
+        if ($i->isEmpty()) {
             return $this->returnJson("今天已签到", 400);
         }
 
@@ -31,7 +30,7 @@ class SignInController extends Controller
 
         $integral->user_id = $user->id;
         $integral->type = 1;
-        $integral->quantity = 5;
+        $integral->quantity = 2;
         $integral->interactor = 0;
 
         $user->integral += $integral->quantity;
@@ -45,13 +44,42 @@ class SignInController extends Controller
         return $this->returnSuccess($integral);
     }
 
-    public function month(Request $request)
+    public function continuous(Request $request)
     {
         $user = Auth::user();
-        $integrals = Integral::query()->where("member_id", $user->id)
-            ->whereDate("created_at", Carbon::now()->format("Y-m"))
-            ->orderBy("created_at")->get();
 
-        return $this->returnSuccess($integrals);
+        $integrals = Integral::query()->where([
+            "user_id" => $user->id,
+            "type"    => 1,
+        ])->whereDate("created_at", ">", Carbon::today()->startOfMonth()->toDateString())
+            ->whereDate("created_at", "<", Carbon::today()->endOfMonth()->toDateString())
+            ->orderBy("created_at", "DESC")->get();
+
+        $today =  Integral::query()->where([
+            "user_id" => $user->id,
+            "type"    => 1,
+        ])->whereDate("created_at", Carbon::today()->toDateString())->first();
+
+        $continuous = 0;
+        
+        if (isEmpty( $today )) {
+            $start = Carbon::today();
+        } else {
+            $start = Carbon::yesterday();
+        }
+
+        for ($i = 0; $i < $integrals->count(); $i++) {
+            if (Carbon::parse($integrals[$i]->created_at)->toDateString() == $start->addDays(-1* $i)->toDateString()){
+                $continuous++;
+            } else {
+                break;
+            }
+        }
+
+        return $this->returnSuccess([
+            "today"      => $today,
+            "continuous" => $continuous,
+            "integrals"  => $integrals
+        ]);
     }
 }

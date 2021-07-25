@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Integral;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class IntegralController extends Controller
@@ -70,5 +72,15 @@ class IntegralController extends Controller
         $integral = Integral::query()->find($request->post("id"));
 
         return $this->returnSuccess($integral);
+    }
+
+    public function month()
+    {
+        $user = Auth::user();
+        $integrals = Integral::query()->where("user_id", $user->id)
+            ->whereMonth("created_at", Carbon::now()->format("m"))
+            ->orderBy("created_at")->get();
+
+        return $this->returnSuccess($integrals);
     }
 }
