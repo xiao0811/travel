@@ -36,4 +36,12 @@ class TestController extends Controller
         $users = User::query()->where("status", 2)->get();
         return [$users->isEmpty()];
     }
+
+    public function getToken()
+    {
+        $user = User::query()->find(1);
+
+        $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
+        return $this->returnSuccess($token);
+    }
 }

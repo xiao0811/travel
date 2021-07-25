@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\GoodsController;
 use App\Http\Controllers\IntegralController;
@@ -31,6 +32,8 @@ Route::get("/error", function () {
 
 Route::post('/login', [UserController::class, "login"]);
 Route::post("sign", [UserController::class, "create"]);
+
+Route::get("/token", [TestController::class, "getToken"]);
 
 Route::group(['middleware' => 'auth:api'], function () {
     // 签到
@@ -85,6 +88,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Question 问题
     Route::group(["prefix" => "question"], function () {
         Route::post("get", [ArticleController::class, "randOne"]);
+    });
+
+    // article / Article 文章
+    Route::group(["prefix" => "address"], function () {
+        Route::post("create", [AddressController::class, "create"]);
+        Route::post("update", [AddressController::class, "update"]);
+        Route::post("list", [AddressController::class, "list"]);
+        Route::post("details", [AddressController::class, "details"]);
     });
 });
 
