@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Goods;
 use App\Models\Integral;
 use App\Models\Order;
-use App\Models\User;
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,9 +16,8 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->post(), [
-            "user_id"   => "required|exists:users,id",
-            "number"    => "required",
-            "goods_id"  => "required|exists:goods,id"
+            "number"   => "required",
+            "goods_id" => "required|exists:goods,id"
         ]);
 
         if ($validator->fails()) {
@@ -27,8 +26,7 @@ class OrderController extends Controller
 
         $number = $request->post("number");
         $goods = Goods::query()->find($request->post("goods_id"));
-        $user = User::query()->find($request->post("user_id"));
-
+        $user = Auth::user();
         if ($number > $goods->quantity || $user->integral < $goods->integral * $number) {
             return $this->returnJson("用户积分不够", 400);
         }
@@ -36,7 +34,7 @@ class OrderController extends Controller
         $order = new Order();
         $order->order_number = Carbon::now()->format("YmdHis") . random_int(100000, 999999);
         $order->number       = $number;
-        $order->member_id    = $request->post("member_id");
+        $order->member_id    = $user->id;
         $order->goods_id     = $request->post("goods_id");
         $order->address      = $request->post("address");
         $order->name         = $request->post("name");
@@ -65,10 +63,10 @@ class OrderController extends Controller
         }
 
         $integral = new Integral();
-        $integral->member_id = $request->post("member_id");
+        $integral->member_id = Auth::id();
         $integral->type = 10;
         $integral->quantity = $goods->integral * $number;
-        $integral->interactor = 1;
+        $integral->interactor = 2;
         $integral->status = 1;
 
         if (!$integral->save()) {
@@ -100,7 +98,7 @@ class OrderController extends Controller
 
     public function list(Request $request)
     {
-        $orders = Order::query();
+        $orders = Order::query()->where("member_id", Auth::id());
 
         if ($request->has("order_number")) {
             $orders->where("order_number", "LIKE", "%" . $request->post("order_number") . "%");
@@ -108,10 +106,6 @@ class OrderController extends Controller
 
         if ($request->has("name")) {
             $orders->where("name", "LIKE", "%" . $request->post("name") . "%");
-        }
-
-        if ($request->has("member_id")) {
-            $orders->where("member_id", $request->post("member_id"));
         }
 
         if ($request->has("goods_id")) {
