@@ -61,7 +61,7 @@ class GoodsController extends AdminController
         $show->field('price', __('价格'));
         $show->field('integral', __('积分'));
         $show->field('quantity', __('商品数量'));
-        $show->field('images', __('商品图片'));
+        $show->multipleImage('images', __('商品图片'));
         $show->field('details', __('商品详情'));
         $show->field('type', __('分类'));
         $show->field('status', __('状态'));
@@ -88,7 +88,7 @@ class GoodsController extends AdminController
         $form->decimal('price', __('价格'));
         $form->number('integral', __('积分'));
         $form->number('quantity', __('商品数量'));
-        $form->text('images', __('商品图片'));
+        $form->multipleImage('images', __('商品图片'))->default("http://127.0.0.1:8000/storage/");
         $form->textarea('details', __('商品详情'));
         $form->switch('type', __('分类'))->default(1);
         $form->switch('status', __('状态'))->default(1);

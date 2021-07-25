@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Goods extends Model
+class Goods extends Base
 {
     use HasFactory;
 
@@ -22,6 +21,4 @@ class Goods extends Model
         "recommend",
         "sold",
     ];
-
-    protected $dateFormat = 'Y-m-d H:i:s';
 }

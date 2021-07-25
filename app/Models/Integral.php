@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Integral extends Model
+class Integral extends Base
 {
     use HasFactory;
 
@@ -17,6 +16,4 @@ class Integral extends Model
         "interactor",
         "status"
     ];
-
-    protected $dateFormat = 'Y-m-d H:i:s';
 }

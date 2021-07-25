@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Order extends Base
 {
     use HasFactory;
 
@@ -20,6 +19,4 @@ class Order extends Model
         "express",
         "express_number"
     ];
-
-    protected $dateFormat = 'Y-m-d H:i:s';
 }

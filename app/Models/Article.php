@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Article extends Base
 {
     use HasFactory;
 
@@ -19,8 +18,6 @@ class Article extends Model
         "sort",
         "thumbnail",
     ];
-
-    protected $dateFormat = 'Y-m-d H:i:s';
 
     public function getType()
     {

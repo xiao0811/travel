@@ -35,8 +35,8 @@ class QuestionController extends AdminController
         $grid->column('answer', __('答案'));
         $grid->column('status', __('状态'));
         $grid->column('type', __('类型'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        // $grid->column('created_at', __('Created at'));
+        // $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }
@@ -80,9 +80,13 @@ class QuestionController extends AdminController
         $form->text('options2', __('选项2'));
         $form->text('options3', __('选项3'));
         $form->text('prompt', __('提示'));
-        $form->switch('answer', __('答案'));
+        $form->radio('answer', __('答案'))->options([1 => "1", 2 => "2", 3 => "3"])->default(1);;
         $form->switch('status', __('状态'))->default(1);
-        $form->switch('type', __('类型'))->default(1);
+        $form->select('type', __('类型'))->options([
+            1 => "小知识1",
+            2 => "小知识2",
+            3 => "小知识3",
+        ])->default(1);
 
         return $form;
     }

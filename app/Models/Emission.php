@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Emission extends Model
+class Emission extends Base
 {
     use HasFactory;
 
@@ -16,6 +15,4 @@ class Emission extends Model
         "status",
         "remark",
     ];
-
-    protected $dateFormat = 'Y-m-d H:i:s';
 }

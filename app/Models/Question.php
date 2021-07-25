@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Question extends Base
 {
     use HasFactory;
 
@@ -19,6 +18,4 @@ class Question extends Model
         "status",
         "type",
     ];
-
-    protected $dateFormat = 'Y-m-d H:i:s';
 }

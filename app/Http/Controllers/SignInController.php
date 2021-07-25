@@ -22,7 +22,7 @@ class SignInController extends Controller
             "type"    => 1,
         ])->whereDate('created_at', Carbon::now()->format("Y-m-d"))->get();
 
-        if ($i->isEmpty()) {
+        if ($i->count() >= 1) {
             return $this->returnJson("今天已签到", 400);
         }
 
