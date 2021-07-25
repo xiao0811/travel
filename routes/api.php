@@ -58,6 +58,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("update", [OrderController::class, "update"]);
         Route::post("list", [OrderController::class, "list"]);
         Route::post("details", [OrderController::class, "details"]);
+        Route::post("/pay", [OrderController::class, "pay"]);
+        Route::post("/finish", [OrderController::class, "finish"]);
+        Route::post("/cancel", [OrderController::class, "cancel"]);
     });
 
     // 用户
