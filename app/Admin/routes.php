@@ -27,4 +27,6 @@ Route::group([
     $router->resource('questions', QuestionController::class);
     // 碳减排
     $router->resource('emissions', EmissionController::class);
+    // Banner
+    $router->resource('banners', BannerController::class);
 });

@@ -100,6 +100,10 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("list", [AddressController::class, "list"]);
         Route::post("details", [AddressController::class, "details"]);
     });
+
+    Route::group(["prefix" => "banner"], function () {
+        Route::post("list", [BannerController::class, "list"]);
+    });
 });
 
 Route::get("/test", [TestController::class, "test"]);

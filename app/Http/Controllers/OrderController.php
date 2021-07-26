@@ -71,8 +71,6 @@ class OrderController extends Controller
             return $this->returnJson("用户积分不够", 400);
         }
 
-        
-
         $order->status = 2;
 
         $goods->quantity -= $order->number; // 商品库存
@@ -81,10 +79,10 @@ class OrderController extends Controller
         $user->integral -= $goods->integral * $order->number; // 用户积分
 
         $integral = new Integral();
-        $integral->member_id = Auth::id();
+        $integral->user_id = Auth::id();
         $integral->type = 10;
         $integral->quantity = $goods->integral * $order->number;
-        $integral->interactor = $order->order_number;
+        $integral->interactor = $order->id;
         $integral->status = 1;
 
         DB::beginTransaction();

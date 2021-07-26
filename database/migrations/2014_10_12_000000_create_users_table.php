@@ -63,6 +63,7 @@ class CreateUsersTable extends Migration
             $table->char("phone", 11)->nullable()->comment("收货人手机号码");
             $table->unsignedTinyInteger("status")->default(1)->comment("订单状态 1: 下单未付款, 2: 付款未发货, 3: 发货未签收, 4: 已完成, 10: 取消");
             $table->string("express")->nullable()->comment("快递公司");
+            $table->decimal("freight")->nullable()->comment("运费");
             $table->string("express_number")->nullable()->comment("快递单号");
             $table->string("remark")->nullable()->comment("备注");
             $table->timestamps();
