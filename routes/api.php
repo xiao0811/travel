@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\GoodsController;
 use App\Http\Controllers\IntegralController;
 use App\Http\Controllers\UserController;
@@ -103,6 +104,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(["prefix" => "banner"], function () {
         Route::post("list", [BannerController::class, "list"]);
+    });
+
+    Route::group(["prefix" => "emission"], function () {
+        Route::post("walk", [BannerController::class, "list"]);
+        Route::post("circle", [BannerController::class, "list"]);
+        Route::post("new_energy", [BannerController::class, "newEnergy"]);
     });
 });
 

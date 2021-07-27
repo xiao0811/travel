@@ -15,6 +15,8 @@ class AddressController extends Controller
             "name"    => "required",
             "phone"   => "required",
             "address" => "required",
+            "area"    => "required",
+            "street"  => "required",
         ]);
 
         if ($validator->fails()) {
@@ -26,6 +28,8 @@ class AddressController extends Controller
         $address->name = $request->post("name");
         $address->phone = $request->post("phone");
         $address->address = $request->post("address");
+        $address->area = $request->post("area");
+        $address->street = $request->post("street");
         $address->default = $request->post("default") ?? false;
         $address->status = $request->post("status") ?? 1;
 

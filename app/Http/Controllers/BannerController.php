@@ -15,6 +15,6 @@ class BannerController extends Controller
             $banners->where("type", $request->post("type"));
         }
 
-        return $this->returnSuccess($banners->orderBy("sort")->gett());
+        return $this->returnSuccess($banners->orderBy("sort")->get());
     }
 }

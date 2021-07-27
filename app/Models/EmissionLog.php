@@ -3,19 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Address extends Base
+class EmissionLog extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        "user_id",
-        "name",
-        "phone",
-        "address",
-        "default",
+        "quantity",
         "status",
-        "area",
-        "street"
+        "type",
+        "correspond",
+        "remark",
     ];
 }
