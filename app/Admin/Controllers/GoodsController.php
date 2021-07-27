@@ -38,6 +38,8 @@ class GoodsController extends AdminController
         $grid->column('status', __('状态'));
         $grid->column('recommend', __('推荐'));
         $grid->column('sold', __('总售量'));
+        $grid->column('return_integral', __('返还碳积分'));
+        $grid->column('return_emission', __('返还碳减排'));
         // $grid->column('remark', __('Remark'));
         // $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));
@@ -68,6 +70,8 @@ class GoodsController extends AdminController
         $show->field('recommend', __('是否推荐'));
         $show->field('sold', __('总销量'));
         $show->field('remark', __('备注'));
+        $show->field('return_integral', __('返还碳积分'));
+        $show->field('return_emission', __('返还碳减排'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -88,12 +92,24 @@ class GoodsController extends AdminController
         $form->decimal('price', __('价格'));
         $form->number('integral', __('积分'));
         $form->number('quantity', __('商品数量'));
-        $form->multipleImage('images', __('商品图片'))->default("http://127.0.0.1:8000/storage/");
+        $form->multipleImage('images', __('商品图片'));
         $form->textarea('details', __('商品详情'));
-        $form->switch('type', __('分类'))->default(1);
-        $form->switch('status', __('状态'))->default(1);
+        $form->select('type', __('分类'))->options([
+            1 => "分类1",
+            2 => "分类2",
+            3 => "分类3",
+            4 => "分类4",
+            5 => "分类5",
+            6 => "分类6",
+        ])->default(1);
+        $form->radio('status', __('状态'))->options([
+            1 => "正常",
+            10 => "下架",
+        ])->default(1);
         $form->switch('recommend', __('是否推荐'));
-        $form->number('sold', __('总销量'));
+        $form->number('return_integral', __('返还碳积分'))->default(0);
+        $form->decimal('return_emission', __('返还碳减排'))->default(0);
+        $form->number('sold', __('总销量'))->default(0);
         $form->text('remark', __('备注'));
 
         return $form;

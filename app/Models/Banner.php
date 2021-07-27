@@ -16,4 +16,16 @@ class Banner extends Model
         "status",
         "remark",
     ];
+
+    public function setUrlAttribute($url)
+    {
+        if (is_array($url)) {
+            $this->attributes['url'] = json_encode($url);
+        }
+    }
+
+    public function getUrlAttribute($url)
+    {
+        return json_decode($url, true);
+    }
 }

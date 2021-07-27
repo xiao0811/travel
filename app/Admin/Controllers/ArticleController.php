@@ -80,6 +80,7 @@ class ArticleController extends AdminController
         $form->text('title', __('标题'));
         $form->text('subtitle', __('副标题'));
         $form->textarea('content', __('内容'));
+        $form->multipleImage('thumbnail', __('文章缩略图'));
         $form->text('author', __('作者'));
         // $form->number('status', __('状态'));
         $form->radio('status', __('状态'))->options([
@@ -92,7 +93,7 @@ class ArticleController extends AdminController
             '2' => '国外',
             "3" => "骁傻",
         ])->default(1);
-        $form->number('sort', __('Sort'));
+        $form->number('sort', __('Sort'))->default(1);
 
         return $form;
     }

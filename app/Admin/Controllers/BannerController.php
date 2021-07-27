@@ -63,7 +63,7 @@ class BannerController extends AdminController
     {
         $form = new Form(new Banner());
 
-        $form->text('url', __('图片'));
+        $form->multipleImage('url', __('图片'));
         $form->select('type', __('类型'))->options([
             '1' => '首页',
             '2' => '商城'

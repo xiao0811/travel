@@ -27,4 +27,16 @@ class Article extends Base
             3 => "合肥资讯",
         ];
     }
+
+    public function setThumbnailAttribute($thumbnail)
+    {
+        if (is_array($thumbnail)) {
+            $this->attributes['thumbnail'] = json_encode($thumbnail);
+        }
+    }
+
+    public function getThumbnailAttribute($thumbnail)
+    {
+        return json_decode($thumbnail, true);
+    }
 }
