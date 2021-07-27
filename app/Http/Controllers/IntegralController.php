@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Integral;
 use App\Models\User;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class IntegralController extends Controller
@@ -82,5 +82,17 @@ class IntegralController extends Controller
             ->orderBy("created_at")->get();
 
         return $this->returnSuccess($integrals);
+    }
+
+    public function cleared(Request $request)
+    {
+        $user = Auth::user();
+        $user->integral = 0;
+        
+        if (!$user->save()) {
+            return $this->returnJson("清零失败", 500);
+        }
+
+        return $this->returnSuccess($user);
     }
 }

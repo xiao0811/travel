@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\EmissionController;
 use App\Http\Controllers\GoodsController;
 use App\Http\Controllers\IntegralController;
 use App\Http\Controllers\UserController;
@@ -79,6 +80,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("list", [IntegralController::class, "list"]);
         Route::post("details", [IntegralController::class, "details"]);
         Route::post("/month", [IntegralController::class, "month"]);
+        // 积分清零
+        Route::post("/cleared", [IntegralController::class, "cleared"]);
     });
 
     // article / Article 文章
@@ -107,9 +110,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::group(["prefix" => "emission"], function () {
-        Route::post("walk", [BannerController::class, "list"]);
-        Route::post("circle", [BannerController::class, "list"]);
-        Route::post("new_energy", [BannerController::class, "newEnergy"]);
+        Route::post("walk", [EmissionController::class, "list"]);
+        Route::post("circle", [EmissionController::class, "list"]);
+        Route::post("new_energy", [EmissionController::class, "newEnergy"]);
+        Route::post("rank", [EmissionController::class, "rank"]);
     });
 });
 

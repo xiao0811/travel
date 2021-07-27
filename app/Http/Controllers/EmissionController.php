@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Emission;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,7 +36,6 @@ class EmissionController extends Controller
     // 而碳减排没有次数限制，碳减排等于50g乘以公里数
     public function circle(Request $request)
     {
-
     }
 
     // new energy 新能源
@@ -44,6 +44,13 @@ class EmissionController extends Controller
     // 后台给个每公里赠送多少碳积分和碳减排的入口，然后系统直接计算
     public function newEnergy(Request $request)
     {
+    }
 
+    public function rank(Request $request)
+    {
+        $users = User::query()->where("emission", ">", 0)
+            ->orderBy("emission", "DESC")->get();
+
+        return $this->returnSuccess($users);
     }
 }
