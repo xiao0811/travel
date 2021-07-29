@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::post('info', [UserController::class, "details"]);
     Route::post('logout', [UserController::class, "logout"]);
+    Route::post("user_info", [UserController::class, "info"]);
 
     // 商品
     Route::group(["prefix" => "goods"], function () {
@@ -110,11 +111,21 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::group(["prefix" => "emission"], function () {
-        Route::post("walk", [EmissionController::class, "list"]);
-        Route::post("circle", [EmissionController::class, "list"]);
-        Route::post("new_energy", [EmissionController::class, "newEnergy"]);
+        Route::post("walk", [EmissionController::class, "walk"]);
+        Route::post("circle", [EmissionController::class, "circle"]);
+        Route::post("list", [EmissionController::class, "newEnergy"]);
         Route::post("rank", [EmissionController::class, "rank"]);
+        Route::post("todayrank", [EmissionController::class, "todayRank"]);
     });
+
+    Route::group(["prefix" => "car"], function () {
+        Route::post("create", [EmissionController::class, "create"]);
+        Route::post("update", [EmissionController::class, "update"]);
+        Route::post("list", [EmissionController::class, "newEnergy"]);
+        Route::post("details", [EmissionController::class, "details"]);
+    });
+
+    Route::post("/upload/image", [EmissionController::class, "imageUpload"]);
 });
 
 Route::get("/test", [TestController::class, "test"]);

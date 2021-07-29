@@ -30,8 +30,12 @@ class AddressController extends Controller
         $address->address = $request->post("address");
         $address->area = $request->post("area");
         $address->street = $request->post("street");
-        $address->default = $request->post("default") ?? false;
+        $address->default = $request->post("default") ?? 0;
         $address->status = $request->post("status") ?? 1;
+
+        if ($address->default == 1) {
+            Address::query()->where("user_id", Auth::id())->update(['default' => 0]);
+        }
 
         if (!$address->save()) {
             return $this->returnJson("地址添加失败", 500);
@@ -52,6 +56,10 @@ class AddressController extends Controller
 
         $address = Address::query()->find($request->post("id"));
 
+        if ($request->post("default") == 1) {
+            Address::query()->where("user_id", Auth::id())->update(['default' => 0]);
+        }
+
         if (!$address->update($request->post())) {
             return $this->returnJson("地址更新失败", 500);
         }
@@ -61,8 +69,10 @@ class AddressController extends Controller
 
     public function list()
     {
-        $addresses = Address::query()->where("user_id", Auth::id())
-            ->orderBy("default")->get();
+        $addresses = Address::query()->where([
+            "user_id" => Auth::id(),
+            "status"  => 1
+        ])->orderBy("default", "desc")->get();
 
         return $this->returnSuccess($addresses);
     }

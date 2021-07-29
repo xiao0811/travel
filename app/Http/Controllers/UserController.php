@@ -31,8 +31,9 @@ class UserController extends Controller
         $res = $client->get($url);
         $content = $res->getBody()->getContents();
         $w = json_decode($content);
-
         $user = User::query()->firstOrCreate(["wechat" => $w->openid]);
+        $user->remember_token = $w->session_key;
+        $user->save();
         $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
         $data = ["user"  => $user, "token" => $token];
         return $this->returnSuccess($data);
@@ -58,15 +59,7 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $validator = Validator::make($request->post(), [
-            "id" => "required|exists:members,id",
-        ]);
-
-        if ($validator->fails()) {
-            return $this->returnJson($validator->errors()->first(), 400);
-        }
-
-        $member = User::query()->find($request->post("id"));
+        $member = User::query()->find(Auth::id());
         if (!$member->update($request->post())) {
             return $this->returnJson("用户更新失败", 500);
         }

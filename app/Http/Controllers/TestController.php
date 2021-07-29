@@ -12,23 +12,7 @@ class TestController extends Controller
 {
     public function test()
     {
-
-        for ($i = 0; $i < 40; $i++) {
-            $goods = new Goods();
-            $goods->name = Str::random(10);
-            $goods->number = Carbon::now()->format("YmdHis") . rand(100000, 999999);
-            $goods->price = rand(1000, 9999) / 100;
-            $goods->integral = rand(1, 20) * 100 - 1;
-            $goods->quantity = rand(1, 100);
-            $goods->images = "https://scpic.chinaz.net/files/pic/pic9/202107/apic34061.jpg";
-            $goods->details = Str::random(1000);
-            $goods->valid_period = Carbon::now()->addDays(rand(40, 90));
-            $goods->max = rand(1, 10);
-            $goods->type = rand(1, 8);
-            $goods->status = 1;
-            $goods->sold = rand(1, 100);
-            $goods->save();
-        }
+        User::query()->where("status", 1)->update(["avatar" => "https://thirdwx.qlogo.cn/mmopen/vi_32/xSQn8SRQojeTTnFOtKxM9ZdIqIhKPjQ9MNvQRncq9yh9cBp1EhZCQpibcLRibfGYI9BPrI2vIJvjBRSJcdHIfibQg/132"]);
     }
 
     public function index(Request $request)
