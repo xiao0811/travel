@@ -70,7 +70,7 @@ class ArticleController extends Controller
         if ($request->has("order")) {
             $articles->orderBy($request->post("order"), $asc);
         }
-
+        
         $limit = $request->post("limit", 20);
         return $this->returnSuccess($articles->paginate($limit));
     }

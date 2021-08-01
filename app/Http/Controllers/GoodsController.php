@@ -78,7 +78,14 @@ class GoodsController extends Controller
         }
 
         $limit = $request->post("limit", 20);
-        return $this->returnSuccess($goods->paginate($limit));
+        $goods = $goods->paginate($limit);
+
+        foreach ($goods as $k => $v) {
+            $image = $v->images;
+            $goods[$k]->image = isset($image[0]) ? asset("storage/") ."/". $image[0] : "";
+        }
+
+        return $this->returnSuccess($goods);
     }
 
     public function details(Request $request)

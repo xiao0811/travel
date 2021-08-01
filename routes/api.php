@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AuditCarController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\EmissionController;
 use App\Http\Controllers\GoodsController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SignInController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -119,10 +121,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::group(["prefix" => "car"], function () {
-        Route::post("create", [EmissionController::class, "create"]);
-        Route::post("update", [EmissionController::class, "update"]);
-        Route::post("list", [EmissionController::class, "newEnergy"]);
-        Route::post("details", [EmissionController::class, "details"]);
+        Route::post("create", [AuditCarController::class, "create"]);
+        Route::post("update", [AuditCarController::class, "update"]);
+        Route::post("list", [AuditCarController::class, "newEnergy"]);
+        Route::post("details", [AuditCarController::class, "details"]);
+    });
+
+    Route::group(["prefix" => "video"], function () {
+        Route::post("details", [VideoController::class, "details"]);
+        Route::post("list", [VideoController::class, "list"]);
     });
 
     Route::post("/upload/image", [EmissionController::class, "imageUpload"]);

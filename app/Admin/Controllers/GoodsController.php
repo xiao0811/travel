@@ -95,12 +95,14 @@ class GoodsController extends AdminController
         $form->multipleImage('images', __('商品图片'));
         $form->textarea('details', __('商品详情'));
         $form->select('type', __('分类'))->options([
-            1 => "分类1",
-            2 => "分类2",
-            3 => "分类3",
-            4 => "分类4",
-            5 => "分类5",
-            6 => "分类6",
+            1 => "合肥定制",
+            2 => "商场",
+            3 => "卡券",
+            4 => "办公",
+            5 => "票务",
+            6 => "居家",
+            7 => "生活",
+            8 => "智能",
         ])->default(1);
         $form->radio('status', __('状态'))->options([
             1 => "正常",

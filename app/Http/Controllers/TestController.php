@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Goods;
 use App\Models\User;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 use Request;
 
 class TestController extends Controller
 {
     public function test()
     {
-        User::query()->where("status", 1)->update(["avatar" => "https://thirdwx.qlogo.cn/mmopen/vi_32/xSQn8SRQojeTTnFOtKxM9ZdIqIhKPjQ9MNvQRncq9yh9cBp1EhZCQpibcLRibfGYI9BPrI2vIJvjBRSJcdHIfibQg/132"]);
+        $goods = Goods::query()->get();
+        foreach ($goods as $good) {
+            $images = $good->images;
+            if(isset($images[0])) {
+                dump($images[0]);
+            }
+        }
+        return $this->returnSuccess([1, 2]);
     }
 
     public function index(Request $request)

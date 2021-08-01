@@ -89,9 +89,9 @@ class ArticleController extends AdminController
         ])->default(1);
         // $form->number('type', __('分类'))->default(1);
         $form->select('type', __('分类'))->options([
-            '1' => '国内',
-            '2' => '国外',
-            "3" => "骁傻",
+            '1' => '合肥资讯',
+            '2' => '安徽资讯',
+            "3" => "国内资讯",
         ])->default(1);
         $form->number('sort', __('Sort'))->default(1);
 
