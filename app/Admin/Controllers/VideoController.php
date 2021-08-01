@@ -2,20 +2,20 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Article;
+use App\Models\Video;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class ArticleController extends AdminController
+class VideoController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Article';
+    protected $title = 'Video';
 
     /**
      * Make a grid builder.
@@ -24,20 +24,16 @@ class ArticleController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Article());
+        $grid = new Grid(new Video());
 
         $grid->column('id', __('ID'));
         $grid->column('title', __('标题'));
-        $grid->column('subtitle', __('副标题'));
-        $grid->column('content', __('Content'));
-        $grid->column('author', __('作者'));
-        $grid->column('status', __('状态'));
-        $grid->column('type', __('类型'));
-        $grid->column('view', __('阅读量'));
-        $grid->column('like', __('点赞数'));
+        // $grid->column('thumbnail', __('缩略图'));
+        $grid->column('url', __('视频链接'));
+        $grid->column('source', __('来源'));
         $grid->column('sort', __('排序'));
-        // $grid->column('created_at', __('Created at'));
-        // $grid->column('updated_at', __('Updated at'));
+        $grid->column('type', __('分类'));
+        $grid->column('status', __('状态'));
 
         return $grid;
     }
@@ -50,20 +46,17 @@ class ArticleController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Article::findOrFail($id));
+        $show = new Show(Video::findOrFail($id));
 
         $show->field('id', __('Id'));
         $show->field('title', __('标题'));
-        $show->field('subtitle', __('副标题'));
+        // $show->field('thumbnail', __('缩略图'));
         $show->field('content', __('内容'));
-        $show->field('author', __('作者'));
-        $show->field('status', __('状态'));
+        $show->field('url', __('视频链接'));
+        $show->field('source', __('来源'));
+        $show->field('sort', __('排序'));
         $show->field('type', __('分类'));
-        $show->field('view', __('View'));
-        $show->field('like', __('Like'));
-        $show->field('sort', __('Sort'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('status', __('状态'));
 
         return $show;
     }
@@ -75,14 +68,14 @@ class ArticleController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Article());
+        $form = new Form(new Video());
 
         $form->text('title', __('标题'));
-        $form->text('subtitle', __('副标题'));
+        $form->text('url', __('视频链接'));
         // $form->textarea('content', __('内容'));
         $form->editor('content','内容');
-        $form->multipleImage('thumbnail', __('文章缩略图'));
-        $form->text('author', __('作者'));
+        // $form->multipleImage('thumbnail', __('文章缩略图'));
+        $form->text('source', __('来源'));
         // $form->number('status', __('状态'));
         $form->radio('status', __('状态'))->options([
             '1' => '显示',

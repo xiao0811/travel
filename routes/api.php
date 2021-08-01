@@ -136,3 +136,4 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 Route::get("/test", [TestController::class, "test"]);
+Route::post('/uploadFile', 'UploadsController@uploadImg');

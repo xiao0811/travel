@@ -29,4 +29,6 @@ Route::group([
     $router->resource('emissions', EmissionController::class);
     // Banner
     $router->resource('banners', BannerController::class);
+
+    $router->resource('videos', VideoController::class);
 });
