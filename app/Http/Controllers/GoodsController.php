@@ -82,7 +82,7 @@ class GoodsController extends Controller
 
         foreach ($goods as $k => $v) {
             $image = $v->images;
-            $goods[$k]->image = isset($image[0]) ? asset("storage/") ."/". $image[0] : "";
+            $goods[$k]->image = isset($image[0]) ? asset("storage/") . "/" . $image[0] : "";
         }
 
         return $this->returnSuccess($goods);
@@ -99,7 +99,7 @@ class GoodsController extends Controller
         }
 
         $goods = Goods::query()->find($request->post("id"));
-
+        $goods->image = isset(($goods->images)[0]) ? asset("storage/") . "/" . ($goods->images)[0] : "";
         return $this->returnSuccess($goods);
     }
 }

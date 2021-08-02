@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuditCarController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CollectController;
 use App\Http\Controllers\EmissionController;
 use App\Http\Controllers\GoodsController;
 use App\Http\Controllers\IntegralController;
@@ -130,6 +131,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(["prefix" => "video"], function () {
         Route::post("details", [VideoController::class, "details"]);
         Route::post("list", [VideoController::class, "list"]);
+    });
+
+    Route::group(["prefix" => "collect"], function () {
+        Route::post("create", [CollectController::class, "create"]);
+        Route::post("cancel", [CollectController::class, "cancel"]);
+        Route::post("list", [CollectController::class, "list"]);
     });
 
     Route::post("/upload/image", [EmissionController::class, "imageUpload"]);

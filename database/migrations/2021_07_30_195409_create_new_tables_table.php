@@ -36,6 +36,7 @@ class CreateNewTablesTable extends Migration
             $table->string("thumbnail")->nullable()->comment("缩略图");
             $table->unsignedInteger("new_id")->nullable()->comment("资讯ID");
             $table->unsignedTinyInteger("status")->nullable()->comment("状态");
+            $table->unsignedTinyInteger("type")->nullable()->comment("分类");
             $table->timestamps();
         });
     }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collect;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class VideoController extends Controller
@@ -21,7 +23,7 @@ class VideoController extends Controller
         }
 
         if ($request->has("title")) {
-            $videos->where("source","LIKE", "%".$request->post("source")."%");
+            $videos->where("source", "LIKE", "%" . $request->post("source") . "%");
         }
 
         $asc = $request->post("asc", "desc");
@@ -44,6 +46,14 @@ class VideoController extends Controller
         }
 
         $video = Video::query()->find($request->post("id"));
+
+        $collect =  Collect::query()->where([
+            "type"    => 2,
+            "user_id" => Auth::id(),
+            "new_id"  => $request->post("id"),
+            "status"  => 1
+        ])->first();
+        $video->collect = $collect;
         return $this->returnSuccess($video);
     }
 }

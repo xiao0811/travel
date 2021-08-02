@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Collect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
@@ -70,7 +72,7 @@ class ArticleController extends Controller
         if ($request->has("order")) {
             $articles->orderBy($request->post("order"), $asc);
         }
-        
+
         $limit = $request->post("limit", 20);
         return $this->returnSuccess($articles->paginate($limit));
     }
@@ -86,7 +88,13 @@ class ArticleController extends Controller
         }
 
         $article = Article::query()->find($request->post("id"));
-
+        $collect =  Collect::query()->where([
+            "type"    => 1,
+            "user_id" => Auth::id(),
+            "new_id"  => $request->post("id"),
+            "status"  => 1
+        ])->first();
+        $article->collect = $collect;
         return $this->returnSuccess($article);
     }
 
