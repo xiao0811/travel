@@ -93,7 +93,7 @@ class GoodsController extends AdminController
         $form->number('integral', __('积分'));
         $form->number('quantity', __('商品数量'));
         $form->multipleImage('images', __('商品图片'));
-        $form->textarea('details', __('商品详情'));
+        $form->editor('content','内容');
         $form->select('type', __('分类'))->options([
             1 => "合肥定制",
             2 => "商场",

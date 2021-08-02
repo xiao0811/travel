@@ -31,4 +31,6 @@ Route::group([
     $router->resource('banners', BannerController::class);
 
     $router->resource('videos', VideoController::class);
+
+    $router->resource('subscribes', SubscribeController::class);
 });

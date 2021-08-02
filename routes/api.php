@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\Controllers\SubscribeController as ControllersSubscribeController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuditCarController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\IntegralController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SignInController;
+use App\Http\Controllers\SubscribeController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
@@ -140,6 +142,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::post("/upload/image", [EmissionController::class, "imageUpload"]);
+
+    // Subscribe
+    Route::group(["prefix" => "subscribe"], function () {
+        // Route::post("create", [CollectController::class, "create"]);
+        Route::post("details", [SubscribeController::class, "details"]);
+        Route::post("list", [SubscribeController::class, "list"]);
+    });
 });
 
 Route::get("/test", [TestController::class, "test"]);
