@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Goods;
 use App\Models\Integral;
 use App\Models\Order;
+use App\Models\SubscribeOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +133,7 @@ class OrderController extends Controller
     public function list(Request $request)
     {
         $orders = Order::query()->where("member_id", Auth::id());
+        $subscribes = SubscribeOrder::query()->where("user_id", Auth::id());
 
         if ($request->has("order_number")) {
             $orders->where("order_number", "LIKE", "%" . $request->post("order_number") . "%");
@@ -139,10 +141,12 @@ class OrderController extends Controller
 
         if ($request->has("name")) {
             $orders->where("name", "LIKE", "%" . $request->post("name") . "%");
+            $subscribes->where("name", "LIKE", "%" . $request->post("name") . "%");
         }
 
         if ($request->has("goods_id")) {
             $orders->where("goods_id", $request->post("goods_id"));
+            $subscribes->where("subscribe_id", $request->post("goods_id"));
         }
 
         if ($request->has("phone")) {
@@ -159,7 +163,10 @@ class OrderController extends Controller
         }
 
         $limit = $request->post("limit", 20);
-        return $this->returnSuccess($orders->paginate($limit));
+        return $this->returnSuccess([
+            "goods" => $orders->paginate($limit),
+            "subscribes" => $subscribes->get()
+        ]);
     }
 
     public function details(Request $request)

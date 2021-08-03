@@ -71,16 +71,7 @@ class SubscribeController extends AdminController
         $form->multipleImage('images', __('商品图片'));
         $form->text('price', __('单价'));
         $form->number('quantity', __('库存'));
-        $form->select('type', __('分类'))->options([
-            1 => "合肥定制",
-            2 => "商场",
-            3 => "卡券",
-            4 => "办公",
-            5 => "票务",
-            6 => "居家",
-            7 => "生活",
-            8 => "智能",
-        ])->default(1);
+        $form->text('valid_period', __('有效期'));
         $form->radio('status', __('状态'))->options([
             1 => "正常",
             10 => "下架",

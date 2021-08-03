@@ -10,7 +10,7 @@ class SubscribeController extends Controller
 {
     public function list(Request $request)
     {
-        $subscribes = Subscribe::query()->where("status", 1);
+        $subscribes = Subscribe::query()->where("status", 1)->where("quantity", ">", 0);
 
         if ($request->has("type")) {
             $subscribes->where("type", $request->post("type"));

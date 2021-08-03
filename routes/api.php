@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SignInController;
 use App\Http\Controllers\SubscribeController;
+use App\Http\Controllers\SubscribeOrderController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
@@ -145,9 +146,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Subscribe
     Route::group(["prefix" => "subscribe"], function () {
-        // Route::post("create", [CollectController::class, "create"]);
         Route::post("details", [SubscribeController::class, "details"]);
         Route::post("list", [SubscribeController::class, "list"]);
+        Route::post("/buy", [SubscribeOrderController::class, "create"]);
     });
 });
 

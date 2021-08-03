@@ -17,6 +17,7 @@ class CreateSubscribesTable extends Migration
             $table->id();
             $table->string("number")->nullable()->comment("商品编号");
             $table->string("name")->nullable()->comment("商品名称");
+            $table->string("valid_period")->nullable()->comment("有效期");
             $table->string("subtitle")->nullable()->comment("商品副标题");
             $table->string("images")->nullable()->comment("商品图片");
             $table->decimal("price")->nullable()->comment("单价");

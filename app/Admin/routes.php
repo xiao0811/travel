@@ -33,4 +33,5 @@ Route::group([
     $router->resource('videos', VideoController::class);
 
     $router->resource('subscribes', SubscribeController::class);
+    $router->resource('subscribe-orders', SubscribeOrderController::class);
 });
