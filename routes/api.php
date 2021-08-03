@@ -15,6 +15,7 @@ use App\Http\Controllers\SignInController;
 use App\Http\Controllers\SubscribeController;
 use App\Http\Controllers\SubscribeOrderController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -154,3 +155,4 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 Route::get("/test", [TestController::class, "test"]);
 Route::post('/uploadFile', 'UploadsController@uploadImg');
+Route::post("upload", [UploadsController::class, "upload"]);

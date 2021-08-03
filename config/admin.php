@@ -411,7 +411,7 @@ return [
             // 编辑器的配置
             'config' => [
                 // `/upload`接口用来上传文件，上传逻辑要自己实现，可参考下面的`上传图片`
-                // 'uploadImgServer' => '/upload'
+                'uploadImgServer' => '/api/upload'
             ]
         ]
     ],
