@@ -34,4 +34,7 @@ Route::group([
 
     $router->resource('subscribes', SubscribeController::class);
     $router->resource('subscribe-orders', SubscribeOrderController::class);
+
+    //  活动
+    $router->resource('activities', ActivityController::class);
 });

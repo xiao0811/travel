@@ -1,6 +1,7 @@
 <?php
 
 use App\Admin\Controllers\SubscribeController as ControllersSubscribeController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuditCarController;
@@ -150,6 +151,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("details", [SubscribeController::class, "details"]);
         Route::post("list", [SubscribeController::class, "list"]);
         Route::post("/buy", [SubscribeOrderController::class, "create"]);
+    });
+
+    Route::group(["prefix" => "activity"], function () {
+        Route::post("details", [ActivityController::class, "details"]);
+        Route::post("list", [ActivityController::class, "list"]);
     });
 });
 
