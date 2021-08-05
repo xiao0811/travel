@@ -12,6 +12,7 @@ use App\Http\Controllers\GoodsController;
 use App\Http\Controllers\IntegralController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SignInController;
 use App\Http\Controllers\SubscribeController;
 use App\Http\Controllers\SubscribeOrderController;
@@ -103,7 +104,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // Question 问题
     Route::group(["prefix" => "question"], function () {
-        Route::post("get", [ArticleController::class, "randOne"]);
+        Route::post("get", [QuestionController::class, "randOne"]);
+        Route::post("submit", [QuestionController::class, "submit"]);
     });
 
     // article / Article 文章
@@ -121,7 +123,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(["prefix" => "emission"], function () {
         Route::post("walk", [EmissionController::class, "walk"]);
         Route::post("circle", [EmissionController::class, "circle"]);
-        Route::post("list", [EmissionController::class, "newEnergy"]);
+        Route::post("newEnergy", [EmissionController::class, "newEnergy"]);
+        Route::post("fuelCar", [EmissionController::class, "car"]);
+        Route::post("circle", [EmissionController::class, "circle"]);
+        Route::post("list", [EmissionController::class, "list"]);
         Route::post("rank", [EmissionController::class, "rank"]);
         Route::post("todayrank", [EmissionController::class, "todayRank"]);
     });
@@ -131,6 +136,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("update", [AuditCarController::class, "update"]);
         Route::post("list", [AuditCarController::class, "newEnergy"]);
         Route::post("details", [AuditCarController::class, "details"]);
+        Route::post("get_cars", [AuditCarController::class, "getCar"]);
     });
 
     Route::group(["prefix" => "video"], function () {

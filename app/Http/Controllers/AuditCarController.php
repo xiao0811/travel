@@ -67,7 +67,7 @@ class AuditCarController extends Controller
         }
 
         if ($request->has("car_number")) {
-            $cars->where("car_number", "LIKE", "%".$request->post("status")."%");
+            $cars->where("car_number", "LIKE", "%" . $request->post("status") . "%");
         }
 
         return $this->returnSuccess($cars->orderBy("updated_at", "DESC")->get());
@@ -86,5 +86,23 @@ class AuditCarController extends Controller
         $car = AuditCar::query()->find($request->post("id"));
 
         return $this->returnSuccess($car);
+    }
+
+    public function getCar(Request $request)
+    {
+        $new_nergy = AuditCar::query()->where([
+            "user_id" => Auth::id(),
+            "type"    => 1
+        ])->get();
+
+        $fuel_car = AuditCar::query()->where([
+            "user_id" => Auth::id(),
+            "type"    => 2
+        ])->get();
+
+        return $this->returnSuccess([
+            "new_nergy" => $new_nergy,
+            "fuel_car" => $fuel_car
+        ]);
     }
 }

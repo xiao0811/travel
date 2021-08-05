@@ -50,7 +50,7 @@ class VideoController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('title', __('标题'));
-        // $show->field('thumbnail', __('缩略图'));
+        $show->field('thumbnail', __('缩略图'));
         $show->field('content', __('内容'));
         $show->field('url', __('视频链接'));
         $show->field('source', __('来源'));
@@ -74,7 +74,7 @@ class VideoController extends AdminController
         $form->text('url', __('视频链接'));
         // $form->textarea('content', __('内容'));
         $form->editor('content','内容');
-        // $form->multipleImage('thumbnail', __('文章缩略图'));
+        $form->multipleImage('thumbnail', __('缩略图'));
         $form->text('source', __('来源'));
         // $form->number('status', __('状态'));
         $form->radio('status', __('状态'))->options([

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditCar;
 use App\Models\Emission;
 use App\Models\NewEnergy;
 use App\Models\User;
 use App\Wechat\WXBizDataCrypt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -59,11 +61,63 @@ class EmissionController extends Controller
     {
     }
 
+    public function list(Request $request)
+    {
+        $type = 1;
+        $newEnergy = NewEnergy::query()->where("user_id", Auth::id())
+            ->whereIn("car_id", AuditCar::query()->where([
+                "user_id" => Auth::id(),
+                "status" => 30,
+                "type" => 1
+            ])->get()->toArray())->select("id")
+            ->whereDate("created_at", Carbon::now()->toDateString())->first();
+
+
+        $type = 2;
+        $fuelCar = NewEnergy::query()->where("user_id", Auth::id())
+            ->whereIn("car_id", AuditCar::query()->where([
+                "user_id" => Auth::id(),
+                "status" => 30,
+                "type" => 2
+            ])->get()->toArray())->select("id")
+            ->whereDate("created_at", Carbon::now()->toDateString())->first();
+        return $this->returnSuccess([
+            "newEnergy" => $newEnergy,
+            "fuelCar" => $fuelCar
+        ]);
+    }
+
     // new energy 新能源
     // 然后新能源根据前端拍照开始和结束里程照片人工计算里程数，
     // 后台根据里程数赠送用户相应的碳积分和碳减排，
     // 后台给个每公里赠送多少碳积分和碳减排的入口，然后系统直接计算
     public function newEnergy(Request $request)
+    {
+        $validator = Validator::make($request->post(), [
+            "car_id"        => "required",
+            "start_mileage" => "required",
+            "end_mileage"   => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnJson($validator->errors()->first(), 400);
+        }
+
+        $ne = new NewEnergy();
+        $ne->user_id = Auth::id();
+        $ne->car_id = $request->post("car_id");
+        $ne->start_mileage = $request->post("start_mileage");
+        $ne->end_mileage = $request->post("end_mileage");
+        $ne->status = 1;
+
+        if (!$ne->save()) {
+            return $this->returnJson("提交失败", 500);
+        }
+
+        return $this->returnSuccess($ne);
+    }
+
+    public function car(Request $request)
     {
         $validator = Validator::make($request->post(), [
             "car_id"        => "required",
@@ -142,5 +196,24 @@ class EmissionController extends Controller
         } else {
             return $this->returnJson("上传失败", 400);
         }
+    }
+
+    private function rad($d)
+    {
+        return $d * M_PI / 180.0;
+    }
+    public function GetDistance($lat1, $lng1, $lat2, $lng2)
+    {
+        $EARTH_RADIUS = 6378.137;
+
+        $radLat1 = $this->rad($lat1);
+        $radLat2 = $this->rad($lat2);
+        $a = $radLat1 - $radLat2;
+        $b = $this->rad($lng1) - $this->rad($lng2);
+        $s = 2 * asin(sqrt(pow(sin($a / 2), 2) + cos($radLat1) * cos($radLat2) * pow(sin($b / 2), 2)));
+        $s = $s * $EARTH_RADIUS;
+        $s = round($s * 10000) / 10000;
+
+        return $s;
     }
 }
