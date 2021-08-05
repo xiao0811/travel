@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuditCar;
+use App\Models\Bubble;
 use App\Models\Emission;
 use App\Models\NewEnergy;
+use App\Models\Step;
 use App\Models\User;
 use App\Wechat\WXBizDataCrypt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -43,12 +46,61 @@ class EmissionController extends Controller
         // $user->emission += 123;
         $pc = new WXBizDataCrypt(env("WECHATAPPID"), $user->remember_token);
         $errCode = $pc->decryptData($request->post("encryptedData"), $request->post("iv"), $data);
-
+        Log::info($data);
         if ($errCode == 0) {
-            Log::info($data);
+            $data = json_decode($data, true);
+            // 处理步行数据
+            foreach ($data["stepInfoList"] as $v) {
+                if (date("Y-m-d", $v["timestamp"]) == Carbon::now()->toDateString()) {
+                    $step = Step::query()->where("user_id", Auth::id())
+                        ->whereDate("created_at", Carbon::now()->toDateString())
+                        ->orderBy("created_at", "DESC")->first();
+
+                    // 本日第一次获取
+                    if (empty($step)) {
+                        $s = $v["step"];
+
+                        $step = new Step();
+                        $step->user_id = Auth::id();
+                    } else {
+                        $s = $v["step"] - $step->step;
+                    }
+                    $step->step = $v["step"];
+                    $step->save();
+
+                    $integral = round($s * 0.00298426);
+                    $emission = round($s * 0.0423223, 2);
+
+                    $ib = Bubble::query()->where([
+                        "user_id" => Auth::id(),
+                        "type" => 1,
+                        "status" => 1
+                    ])->whereDate("created_at", Carbon::now()->toDateString())->first();
+
+                    if (empty($ib)) {
+                        Bubble::create(Auth::id(), $integral, 3, 1);
+                    } else {
+                        $ib->quantity += $integral;
+                        $ib->save();
+                    }
+
+                    $ie = Bubble::query()->where([
+                        "user_id" => Auth::id(),
+                        "type" => 11,
+                        "status" => 1
+                    ])->whereDate("created_at", Carbon::now()->toDateString())->first();
+
+                    if (empty($ie)) {
+                        Bubble::create(Auth::id(), $emission, 3, 1);
+                    } else {
+                        $ie->quantity += $emission;
+                        $ie->save();
+                    }
+                }
+            }
             return $this->returnSuccess($data);
         } else {
-            return $this->returnSuccess($errCode);
+            return $this->returnSuccess("数据");
         }
     }
 

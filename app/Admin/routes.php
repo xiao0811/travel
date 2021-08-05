@@ -37,4 +37,6 @@ Route::group([
 
     //  活动
     $router->resource('activities', ActivityController::class);
+    $router->resource('audit-cars', AuditCarController::class);
+    $router->resource('new-energies', NewEnergyController::class);
 });

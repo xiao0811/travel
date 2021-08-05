@@ -6,6 +6,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuditCarController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BubbleController;
 use App\Http\Controllers\CollectController;
 use App\Http\Controllers\EmissionController;
 use App\Http\Controllers\GoodsController;
@@ -163,6 +164,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("details", [ActivityController::class, "details"]);
         Route::post("list", [ActivityController::class, "list"]);
     });
+    
+    Route::post("/index/bubble", [BubbleController::class, "indexBubble"]);
+    Route::post("/bubble/click", [BubbleController::class, "click"]);
+    Route::post("/step/log", [BubbleController::class, "stepLog"]);
+    Route::post("/gaode/location", [BubbleController::class, "location"]);
 });
 
 Route::get("/test", [TestController::class, "test"]);
