@@ -76,7 +76,7 @@ class NewEnergyController extends AdminController
         $form->text('car_id', __('车辆ID'));
         $form->text('start_mileage', __('Start mileage'));
         $form->text('end_mileage', __('End mileage'));
-        $form->decimal('mileage', __('Mileage'));
+        $form->decimal('mileage', __('里程 / 时间'));
         $form->select('type', __('类型'))->options([
             "1"  => "电动车",
             "2" => "燃油车",

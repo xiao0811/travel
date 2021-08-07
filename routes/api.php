@@ -168,6 +168,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post("/bubble/click", [BubbleController::class, "click"]);
     Route::post("/step/log", [BubbleController::class, "stepLog"]);
     Route::post("/gaode/location", [BubbleController::class, "location"]);
+    Route::post("/gaode/distance", [EmissionController::class, "distance"]);
 });
 
 Route::get("/test", [TestController::class, "test"]);
