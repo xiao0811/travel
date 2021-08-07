@@ -62,21 +62,23 @@ class BubbleController extends Controller
 
     public function stepLog(Request $request)
     {
-        $steps = collect([]);
+        $steps = [];
         for ($i = 0; $i < 12; $i++) {
             $data = Step::query()->where("user_id", Auth::id())
                 ->whereMonth("created_at", Carbon::now()->addMonth(-1 * $i)->format("m"))
                 ->orderBy("created_at", "DESC")->get();
 
-            if ($data->count > 0) {
-                $steps = $steps->concat([$i => $data]);
+            if ($data->count() > 0) {
+
+                foreach ($data as $v) {
+                    $v->emission = round($v->step * 0.0423223, 2);
+                }
+
+                $steps[] = ["data" => $data, "month" =>  Carbon::now()->addMonth(-1 * $i)->format("m")];
             }
         }
 
-        return $this->returnSuccess([
-            "month" => date("m"),
-            "data" => $steps
-        ]);
+        return $this->returnSuccess($steps);
     }
 
     public function location(Request $request)
@@ -88,12 +90,14 @@ class BubbleController extends Controller
         if ($validator->fails()) {
             return $this->returnJson($validator->errors()->first(), 400);
         }
-        $url = "https://restapi.amap.com/v3/geocode/regeo?key=3d90aff678e9d3ae036d385865c3d4bf&";
+        $url = "https://restapi.amap.com/v3/geocode/regeo?key=3d90aff678e9d3ae036d385865c3d4bf&location=";
 
         $client = new Client();
 
         $res = $client->get($url . $request->post("coordinate"));
 
-        return $this->returnSuccess($res->getBody());
+        $data = json_decode($res->getBody()->getContents(), true);
+
+        return $this->returnSuccess($data);
     }
 }

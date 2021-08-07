@@ -1,6 +1,5 @@
 <?php
 
-use App\Admin\Controllers\SubscribeController as ControllersSubscribeController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ArticleController;

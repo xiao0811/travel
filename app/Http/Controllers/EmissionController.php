@@ -78,7 +78,7 @@ class EmissionController extends Controller
                     ])->whereDate("created_at", Carbon::now()->toDateString())->first();
 
                     if (empty($ib)) {
-                        Bubble::create(Auth::id(), $integral, 3, 1);
+                        Bubble::create(Auth::id(), $integral, 1, 1);
                     } else {
                         $ib->quantity += $integral;
                         $ib->save();
@@ -91,7 +91,7 @@ class EmissionController extends Controller
                     ])->whereDate("created_at", Carbon::now()->toDateString())->first();
 
                     if (empty($ie)) {
-                        Bubble::create(Auth::id(), $emission, 3, 1);
+                        Bubble::create(Auth::id(), $emission, 11, 1);
                     } else {
                         $ie->quantity += $emission;
                         $ie->save();
@@ -115,24 +115,21 @@ class EmissionController extends Controller
 
     public function list(Request $request)
     {
-        $type = 1;
         $newEnergy = NewEnergy::query()->where("user_id", Auth::id())
             ->whereIn("car_id", AuditCar::query()->where([
                 "user_id" => Auth::id(),
-                "status" => 30,
+                // "status" => 30,
                 "type" => 1
-            ])->get()->toArray())->select("id")
-            ->whereDate("created_at", Carbon::now()->toDateString())->first();
+            ])->get()->toArray())
+            ->orderBy("created_at", "DESC")->first();
 
-
-        $type = 2;
         $fuelCar = NewEnergy::query()->where("user_id", Auth::id())
             ->whereIn("car_id", AuditCar::query()->where([
                 "user_id" => Auth::id(),
-                "status" => 30,
+                // "status" => 30,
                 "type" => 2
-            ])->get()->toArray())->select("id")
-            ->whereDate("created_at", Carbon::now()->toDateString())->first();
+            ])->get()->toArray())
+            ->orderBy("created_at", "DESC")->first();
         return $this->returnSuccess([
             "newEnergy" => $newEnergy,
             "fuelCar" => $fuelCar
@@ -160,6 +157,7 @@ class EmissionController extends Controller
         $ne->car_id = $request->post("car_id");
         $ne->start_mileage = $request->post("start_mileage");
         $ne->end_mileage = $request->post("end_mileage");
+        $ne->type = 1;
         $ne->status = 1;
 
         if (!$ne->save()) {
@@ -186,6 +184,7 @@ class EmissionController extends Controller
         $ne->car_id = $request->post("car_id");
         $ne->start_mileage = $request->post("start_mileage");
         $ne->end_mileage = $request->post("end_mileage");
+        $ne->type = 2;
         $ne->status = 1;
 
         if (!$ne->save()) {

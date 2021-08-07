@@ -27,7 +27,7 @@ class NewEnergyController extends AdminController
         $grid = new Grid(new NewEnergy());
 
         $grid->column('user_id', __('用户'));
-        $grid->column('car_number', __('车牌号'));
+        $grid->column('car_id', __('车辆ID'));
         $grid->column('start_mileage', __('开始里程'));
         $grid->column('end_mileage', __('结束里程'));
         $grid->column('mileage', __('里程'));
@@ -50,7 +50,7 @@ class NewEnergyController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('user_id', __('User id'));
-        $show->field('car_number', __('Car number'));
+        $show->field('car_id', __('车辆ID'));
         $show->field('start_mileage', __('Start mileage'));
         $show->field('end_mileage', __('End mileage'));
         $show->field('mileage', __('Mileage'));
@@ -73,12 +73,20 @@ class NewEnergyController extends AdminController
         $form = new Form(new NewEnergy());
 
         $form->number('user_id', __('User id'));
-        $form->text('car_number', __('Car number'));
+        $form->text('car_id', __('车辆ID'));
         $form->text('start_mileage', __('Start mileage'));
         $form->text('end_mileage', __('End mileage'));
         $form->decimal('mileage', __('Mileage'));
-        $form->switch('type', __('Type'));
-        $form->switch('status', __('Status'));
+        $form->select('type', __('类型'))->options([
+            "1"  => "电动车",
+            "2" => "燃油车",
+        ]);
+        $form->select('status', __('状态'))->options([
+            "1"  => "审核中",
+            "10" => "审核拒绝",
+            "20" => "审核撤销",
+            "30" => "审核通过"
+        ]);
         $form->text('remark', __('Remark'));
 
         return $form;

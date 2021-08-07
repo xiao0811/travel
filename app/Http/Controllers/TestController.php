@@ -10,14 +10,10 @@ class TestController extends Controller
 {
     public function test()
     {
-        $goods = Goods::query()->get();
-        foreach ($goods as $good) {
-            $images = $good->images;
-            if(isset($images[0])) {
-                dump($images[0]);
-            }
-        }
-        return $this->returnSuccess([1, 2]);
+        $user = User::query()->find(22);
+
+        $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
+        return $this->returnSuccess($token);
     }
 
     public function index(Request $request)
