@@ -92,6 +92,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("/month", [IntegralController::class, "month"]);
         // 积分清零
         Route::post("/cleared", [IntegralController::class, "cleared"]);
+        // 历史累计
+        Route::post("/total", [IntegralController::class, "total"]);
+        // 兑换码
+        Route::post("/redeem", [IntegralController::class, "redeem"]);
+        Route::post("/log", [IntegralController::class, "log"]);
     });
 
     // article / Article 文章
@@ -129,6 +134,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("list", [EmissionController::class, "list"]);
         Route::post("rank", [EmissionController::class, "rank"]);
         Route::post("todayrank", [EmissionController::class, "todayRank"]);
+        Route::post("teamrank", [EmissionController::class, "teamRank"]);
+        Route::post("total", [EmissionController::class, "total"]);
+        Route::post("poster", [EmissionController::class, "poster"]);
     });
 
     Route::group(["prefix" => "car"], function () {

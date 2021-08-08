@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bubble;
 use App\Models\Integral;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -88,11 +89,58 @@ class IntegralController extends Controller
     {
         $user = Auth::user();
         $user->integral = 0;
-        
+
         if (!$user->save()) {
             return $this->returnJson("清零失败", 500);
         }
 
         return $this->returnSuccess($user);
+    }
+
+    public function total(Request $request)
+    {
+        $integral = Bubble::query()->where([
+            "user_id" => Auth::id(),
+            "status" => 30
+        ])->where("type", "<", 10)->sum("quantity");
+
+        return $this->returnSuccess($integral);
+    }
+
+    public function log(Request $request)
+    {
+        $integrals = [];
+        for ($i = 0; $i < 12; $i++) {
+            $month = Carbon::now()->addMonth(-1 * $i)->format("m");
+            $is = Bubble::query()->where([
+                "user_id" => Auth::id(),
+                "status"  => 30
+            ])->whereMonth("created_at", $month);
+            if ($is->count() > 0) {
+                $data = ["integral" => $is, "month"=> $month];
+                $integrals[] = $data;
+            }
+        }
+
+        return $this->returnSuccess($integrals);
+    }
+
+    public function redeem(Request $request)
+    {
+        $validator = Validator::make($request->post(), [
+            "code" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnJson($validator->errors()->first(), 400);
+        }
+
+        if ($request->post("code") != "123456") {
+            return $this->returnJson("改兑换码无效", 400);
+        }
+
+        Bubble::create(Auth::id(), 10, 6, 1);
+
+        return $this->returnSuccess("兑换成功");
     }
 }

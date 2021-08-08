@@ -7,6 +7,8 @@ use App\Models\Bubble;
 use App\Models\Emission;
 use App\Models\NewEnergy;
 use App\Models\Step;
+use App\Models\Subscribe;
+use App\Models\SubscribeOrder;
 use App\Models\User;
 use App\Wechat\WXBizDataCrypt;
 use Illuminate\Http\Request;
@@ -158,6 +160,58 @@ class EmissionController extends Controller
         ]);
     }
 
+    public function total(Request $request)
+    {
+        $bubbles = Bubble::query()->where("status", 30)->where("type", ">", 10);
+
+        if ($request->has("type")) {
+            $bubbles->where("created_at", "<", Carbon::now()->addMonth(-1)->toDateTime());
+        }
+
+        $total = $bubbles->sum("quantity");
+        $travel = $bubbles->where("type", "<", 14)->sum("quantity");
+        $welfare = $bubbles->where("type", 14)->sum("quantity");
+        $educate = $bubbles->where("type", 15)->sum("quantity");
+        return $this->returnSuccess([
+            "total" => $total,
+            "travel" => $travel,
+            "welfare" => $welfare,
+            "educate" => $educate,
+        ]);
+    }
+
+    public function poster(Request $request)
+    {
+        $user = Auth::user();
+        $orders = SubscribeOrder::query()->with("subscribe")
+            ->where("created_at", ">", Carbon::now()->startOfMonth()->toDateTime())
+            ->where("user_id", Auth::id())->get();
+
+        $data = [];
+        foreach ($orders as $order) {
+            if (!isset($data[$order->subscribe->id])) {
+                $data[$order->subscribe->id] = 1;
+            } else {
+                $data[$order->subscribe->id]++;
+            }
+        }
+
+        $tree = [];
+
+        foreach ($data as $k => $v) {
+            $name = Subscribe::query()->find($k);
+            $tree[] = [
+                "name" => $name->name,
+                "count" => $v
+            ];
+        }
+
+        return $this->returnSuccess([
+            "user"  => $user,
+            "data" => $tree
+        ]);
+    }
+
     // new energy 新能源
     // 然后新能源根据前端拍照开始和结束里程照片人工计算里程数，
     // 后台根据里程数赠送用户相应的碳积分和碳减排，
@@ -250,6 +304,14 @@ class EmissionController extends Controller
         $self = User::query()->find(Auth::id());
         $self->rank = $i;
         return $this->returnSuccess(["self" => $self, "user" => $users]);
+    }
+
+    public function teamRank(Request $request)
+    {
+        $team = SubscribeOrder::query()->where("type", 2)->groupBy("name")
+            ->orderby("quantity")->get();
+
+        return $this->returnSuccess($team);
     }
 
     public function imageUpload(Request $request)
