@@ -18,46 +18,63 @@ class BubbleController extends Controller
         $bubbles = Bubble::query()->where("user_id", Auth::id())->where("status", 1)
             ->where("created_at", "<", Carbon::tomorrow()->toDateTimeString())
             ->where("quantity", ">", 0)->get();
-        return $this->returnSuccess($bubbles);
+
+        $index = [];
+        foreach ($bubbles as $bubble) {
+            // $bubble->quantity = round($bubble->quantity);
+            if (!isset($index[$bubble->type])) {
+                $index[$bubble->type] = $bubble->quantity;
+            }
+            $index[$bubble->type] += $bubble->quantity;
+        }
+        $data = [];
+        foreach ($index as $k => $v) {
+            $data[] = ["type" => $k, "quantity" => round($v)];
+        }
+
+        return $this->returnSuccess($data);
     }
 
     public function click(Request $request)
     {
         $validator = Validator::make($request->post(), [
-            "id" => "required",
+            "type" => "required",
         ]);
 
         if ($validator->fails()) {
             return $this->returnJson($validator->errors()->first(), 400);
         }
 
-        $bubble = Bubble::query()->find($request->post("id"));
-
         $user = Auth::user();
-        if ($user->id != $bubble->user_id) {
-            return $this->returnJson("这个气泡不是你的", 400);
-        }
-
-        if ($bubble->type < 10) {
-            $user->integral += $bubble->quantity;
-        } else {
-            $user->emission += $bubble->quantity;
-        }
+        $bubbles = Bubble::query()->where([
+            "type"    => $request->post("type"),
+            "status"  => 1,
+            "user_id" => $user->id
+        ])->where("created_at", "<", Carbon::tomorrow()->toDateTimeString())
+            ->get();
 
         DB::beginTransaction();
+
+        foreach ($bubbles as $bubble) {
+            if ($bubble->type < 10) {
+                $user->integral += $bubble->quantity;
+            } else {
+                $user->emission += $bubble->quantity;
+            }
+            $bubble->status = 10;
+            if (!$bubble->save()) {
+                DB::rollBack();
+                return  $this->returnJson("领取失败", 400);
+            }
+        }
+
         if (!$user->save()) {
             DB::rollBack();
             return  $this->returnJson("领取失败", 400);
         }
-        $bubble->status = 10;
-        if (!$bubble->save()) {
-            DB::rollBack();
-            return  $this->returnJson("领取失败", 400);
-        }
-
         DB::commit();
 
-        return $this->returnSuccess($bubble);
+        return $this->returnSuccess($bubbles);
     }
 
     public function stepLog(Request $request)

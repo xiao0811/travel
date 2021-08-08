@@ -111,6 +111,28 @@ class EmissionController extends Controller
     // 而碳减排没有次数限制，碳减排等于50g乘以公里数
     public function circle(Request $request)
     {
+        $validator = Validator::make($request->post(), [
+            "distance" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnJson($validator->errors()->first(), 400);
+        }
+        $circle = Bubble::query()->where([
+            "user_id" => Auth::id(),
+            "type"    => 3,
+            "classification" => 2
+        ])->whereDate("created_at", date("Y-m-d"))->get();
+        Log::info($circle);
+        if ($circle->count() < 2) {
+            $integral = 10;
+            Bubble::create(Auth::id(), $integral, 3, 2);
+        }
+
+        $emission = $request->post("distance") * 50;
+        Bubble::create(Auth::id(), $emission, 12, 1);
+
+        return $this->returnSuccess("提交完成");
     }
 
     public function list(Request $request)
