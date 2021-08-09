@@ -18,47 +18,56 @@ class SignInController extends Controller
     {
         $user = Auth::user();
 
-        $i = Integral::query()->where([
+        $today = Bubble::query()->where([
             "user_id" => $user->id,
             "type"    => 1,
-        ])->whereDate('created_at', Carbon::now()->format("Y-m-d"))->get();
+        ])->whereDate("created_at", Carbon::today()->toDateString())->first();
 
-        if ($i->count() >= 1) {
+        if ($today->count() > 0) {
             return $this->returnJson("今天已签到", 400);
         }
 
-        $integral = new Integral();
+        $continuous = 0;
 
-        $integral->user_id = $user->id;
-        $integral->type = 1;
-        $integral->quantity = 2;
-        $integral->interactor = 0;
-
-        DB::beginTransaction();
-        if (!$integral->save() || !$user->save()) {
-            DB::rollBack();
-            return $this->returnJson("签到失败", 500);
-        }
-        if (!Bubble::create(Auth::id(), $integral->quantity, 11, 1)) {
-            DB::rollBack();
-            return $this->returnJson("签到失败", 500);
-        }
-        DB::commit();
-        return $this->returnSuccess($integral);
-    }
-
-    public function continuous(Request $request)
-    {
-        $user = Auth::user();
-
-        $integrals = Integral::query()->where([
+        $integrals = Bubble::query()->where([
             "user_id" => $user->id,
             "type"    => 1,
         ])->whereDate("created_at", ">", Carbon::today()->startOfMonth()->toDateString())
             ->whereDate("created_at", "<", Carbon::today()->endOfMonth()->toDateString())
             ->orderBy("created_at", "DESC")->get();
 
-        $today =  Integral::query()->where([
+        if (isEmpty($today)) {
+            $start = Carbon::today();
+        } else {
+            $start = Carbon::yesterday();
+        }
+
+        for ($i = 0; $i < $integrals->count(); $i++) {
+            if (Carbon::parse($integrals[$i]->created_at)->toDateString() == $start->addDays(-1 * $i)->toDateString()) {
+                $continuous++;
+            } else {
+                break;
+            }
+        }
+
+        if (!Bubble::create(Auth::id(), $continuous, 11, 1)) {
+            return $this->returnJson("签到失败", 500);
+        }
+        return $this->returnSuccess("签到成功");
+    }
+
+    public function continuous(Request $request)
+    {
+        $user = Auth::user();
+
+        $integrals = Bubble::query()->where([
+            "user_id" => $user->id,
+            "type"    => 1,
+        ])->whereDate("created_at", ">", Carbon::today()->startOfMonth()->toDateString())
+            ->whereDate("created_at", "<", Carbon::today()->endOfMonth()->toDateString())
+            ->orderBy("created_at", "DESC")->get();
+
+        $today = Bubble::query()->where([
             "user_id" => $user->id,
             "type"    => 1,
         ])->whereDate("created_at", Carbon::today()->toDateString())->first();

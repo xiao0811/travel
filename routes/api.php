@@ -164,19 +164,25 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(["prefix" => "subscribe"], function () {
         Route::post("details", [SubscribeController::class, "details"]);
         Route::post("list", [SubscribeController::class, "list"]);
-        Route::post("/buy", [SubscribeOrderController::class, "create"]);
     });
 
+    Route::group(["prefix" => "subscribe_order"], function () {
+        Route::post("/buy", [SubscribeOrderController::class, "create"]);
+        Route::post("/list", [SubscribeOrderController::class, "list"]);
+        Route::post("/details", [SubscribeOrderController::class, "details"]);
+    });
     Route::group(["prefix" => "activity"], function () {
         Route::post("details", [ActivityController::class, "details"]);
         Route::post("list", [ActivityController::class, "list"]);
     });
-    
+
     Route::post("/index/bubble", [BubbleController::class, "indexBubble"]);
     Route::post("/bubble/click", [BubbleController::class, "click"]);
     Route::post("/step/log", [BubbleController::class, "stepLog"]);
     Route::post("/gaode/location", [BubbleController::class, "location"]);
     Route::post("/gaode/distance", [EmissionController::class, "distance"]);
+
+    Route::post("/share", [IntegralController::class, "share"]);
 });
 
 Route::get("/test", [TestController::class, "test"]);

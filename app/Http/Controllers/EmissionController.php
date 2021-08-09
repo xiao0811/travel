@@ -321,7 +321,7 @@ class EmissionController extends Controller
         }
 
         $file = $request->file('file');
-
+        Log::info($file->getClientOriginalExtension());
         if (!in_array($file->getClientOriginalExtension(), ['jpg', 'png'])) {
             return $this->returnJson("图片格式不正确", 400);
         }

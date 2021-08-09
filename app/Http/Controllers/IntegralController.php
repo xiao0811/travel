@@ -115,9 +115,9 @@ class IntegralController extends Controller
             $is = Bubble::query()->where([
                 "user_id" => Auth::id(),
                 "status"  => 30
-            ])->whereMonth("created_at", $month);
+            ])->whereMonth("created_at", $month)->get();
             if ($is->count() > 0) {
-                $data = ["integral" => $is, "month"=> $month];
+                $data = ["integral" => $is, "month" => $month];
                 $integrals[] = $data;
             }
         }
@@ -142,5 +142,21 @@ class IntegralController extends Controller
         Bubble::create(Auth::id(), 10, 6, 1);
 
         return $this->returnSuccess("兑换成功");
+    }
+
+    public function share(Request $request)
+    {
+        $bubble = Bubble::query()->where([
+            "user_id" => Auth::id(),
+            "type"    => 2
+        ])->get();
+
+        if ($bubble->count() > 2) {
+            return $this->returnJson("每天分享三次", 400);
+        }
+
+        Bubble::create(Auth::id(), 5, 2, 1);
+
+        return $this->returnSuccess("分享成功");
     }
 }
