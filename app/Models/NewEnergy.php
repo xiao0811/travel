@@ -27,15 +27,16 @@ class NewEnergy extends Base
         parent::boot();
 
         static::updating(function ($model) {
-            $set= Set::query()->find(1);
-
+            $set = Set::query()->find(1);
             if ($model->type == 1) {
                 $emission = $model->mileage * $set->new_e;
             } elseif ($model->type == 2) {
-                $emission = $model->mileage* $set->car_e;
+                $emission = $model->mileage * $set->car_e;
             }
 
-            Bubble::create(Auth::id(), $emission, 13, 1);
+            if (!Bubble::create($model->user_id, $emission, 13, 1)) {
+                Log::info("插入错误");
+            }
         });
     }
 }

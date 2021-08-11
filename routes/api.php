@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("/pay", [OrderController::class, "pay"]);
         Route::post("/finish", [OrderController::class, "finish"]);
         Route::post("/cancel", [OrderController::class, "cancel"]);
+        Route::post("/express", [OrderController::class, "express"]);
     });
 
     // 用户
@@ -164,10 +165,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(["prefix" => "subscribe"], function () {
         Route::post("details", [SubscribeController::class, "details"]);
         Route::post("list", [SubscribeController::class, "list"]);
+        Route::post("/buy", [SubscribeOrderController::class, "create"]);
     });
 
     Route::group(["prefix" => "subscribe_order"], function () {
-        Route::post("/buy", [SubscribeOrderController::class, "create"]);
         Route::post("/list", [SubscribeOrderController::class, "list"]);
         Route::post("/details", [SubscribeOrderController::class, "details"]);
     });

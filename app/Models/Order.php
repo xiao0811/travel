@@ -16,4 +16,9 @@ class Order extends Base
         "express",
         "express_number"
     ];
+
+    public function goods()
+    {
+        return $this->belongsTo('App\Models\Goods');
+    }
 }

@@ -34,7 +34,7 @@ class SubscribeOrderController extends Controller
         $order->subscribe_id = $request->post("subscribe_id");
         $order->quantity = $request->post("quantity");
         $order->amount = $request->post("quantity") * $subscribe->price;
-        $order->certificate = Carbon::now()->format("YmdHis") . rand(100000, 999999);
+        $order->certificate = Carbon::now()->format("ymd") . rand(1000, 9999);
 
         if ($request->post("type") == 1) {
             $order->name = $user->name;
@@ -68,12 +68,9 @@ class SubscribeOrderController extends Controller
         return $this->returnSuccess($order);
     }
 
-    public function list(Request $request)
+    public function list()
     {
-        $orders = SubscribeOrder::query();
-
-        $orders->where("user_id", Auth::id())->orderBy("created_at", "DESC")->get();
-
+        $orders = SubscribeOrder::query()->with("subscribe")->where("user_id", Auth::id())->get();
         return $this->returnSuccess($orders);
     }
 

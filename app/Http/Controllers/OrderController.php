@@ -7,6 +7,7 @@ use App\Models\Integral;
 use App\Models\Order;
 use App\Models\SubscribeOrder;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -132,8 +133,7 @@ class OrderController extends Controller
 
     public function list(Request $request)
     {
-        $orders = Order::query()->where("member_id", Auth::id());
-        $subscribes = SubscribeOrder::query()->where("user_id", Auth::id());
+        $orders = Order::query()->where("member_id", Auth::id())->with("goods");
 
         if ($request->has("order_number")) {
             $orders->where("order_number", "LIKE", "%" . $request->post("order_number") . "%");
@@ -141,19 +141,17 @@ class OrderController extends Controller
 
         if ($request->has("name")) {
             $orders->where("name", "LIKE", "%" . $request->post("name") . "%");
-            $subscribes->where("name", "LIKE", "%" . $request->post("name") . "%");
         }
 
         if ($request->has("goods_id")) {
             $orders->where("goods_id", $request->post("goods_id"));
-            $subscribes->where("subscribe_id", $request->post("goods_id"));
         }
 
         if ($request->has("phone")) {
             $orders->where("phone", $request->post("phone"));
         }
 
-        if ($request->has("status")) {
+        if ($request->post("status") != 0) {
             $orders->where("status", $request->post("status"));
         }
 
@@ -163,10 +161,7 @@ class OrderController extends Controller
         }
 
         $limit = $request->post("limit", 20);
-        return $this->returnSuccess([
-            "goods" => $orders->paginate($limit),
-            "subscribes" => $subscribes->get()
-        ]);
+        return $this->returnSuccess($orders->paginate($limit));
     }
 
     public function details(Request $request)
@@ -230,12 +225,39 @@ class OrderController extends Controller
             return $this->returnJson("不是该账号订单", 400);
         }
 
-        $order->status = 4;
+        $order->status = 10;
 
         if (!$order->save()) {
             return $this->returnJson("提交失败", 500);
         }
 
         return $this->returnSuccess($order);
+    }
+
+    public function express(Request $request)
+    {
+        $validator = Validator::make($request->post(), [
+            "id" => "required|exists:orders,id",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnJson($validator->errors()->first(), 400);
+        }
+
+        $order = Order::query()->find($request->post("id"));
+
+        // $express = $order->express;
+        $express = "圆通";
+        // $express_number = $order->express_number;
+        $express_number = "YT5691870215698";
+
+        $url = "https://www.kuaidi100.com/chaxun?com=" . $express . "&nu=" . $express_number;
+
+        $client = new Client();
+
+        $res = $client->get($url);
+
+        // $data = json_decode($res->getBody()->getContents(), true);
+        return $this->returnSuccess($res->getBody()->getContents());
     }
 }

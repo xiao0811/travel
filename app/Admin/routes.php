@@ -40,4 +40,5 @@ Route::group([
     $router->resource('audit-cars', AuditCarController::class);
     $router->resource('new-energies', NewEnergyController::class);
     $router->resource('sets', SetController::class);
+    $router->resource('regions', RegionController::class);
 });

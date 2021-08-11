@@ -22,7 +22,7 @@ class SignInController extends Controller
             "user_id" => $user->id,
             "type"    => 1,
         ])->whereDate("created_at", Carbon::today()->toDateString())->first();
-
+        
         if ($today->count() > 0) {
             return $this->returnJson("今天已签到", 400);
         }
@@ -49,8 +49,12 @@ class SignInController extends Controller
                 break;
             }
         }
+        $fen = $continuous;
+        if ($continuous > 7) {
+            $fen = 7;
+        }
 
-        if (!Bubble::create(Auth::id(), $continuous, 11, 1)) {
+        if (!Bubble::create(Auth::id(), $fen)) {
             return $this->returnJson("签到失败", 500);
         }
         return $this->returnSuccess("签到成功");
