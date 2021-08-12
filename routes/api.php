@@ -13,6 +13,7 @@ use App\Http\Controllers\IntegralController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\SignInController;
 use App\Http\Controllers\SubscribeController;
 use App\Http\Controllers\SubscribeOrderController;
@@ -172,6 +173,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("/list", [SubscribeOrderController::class, "list"]);
         Route::post("/details", [SubscribeOrderController::class, "details"]);
     });
+
+    Route::group(["prefix" => "region"], function () {
+        Route::post("/list", [RegionController::class, "list"]);
+        Route::post("/details", [RegionController::class, "details"]);
+        Route::post("/trees", [RegionController::class, "trees"]);
+    });
+
     Route::group(["prefix" => "activity"], function () {
         Route::post("details", [ActivityController::class, "details"]);
         Route::post("list", [ActivityController::class, "list"]);

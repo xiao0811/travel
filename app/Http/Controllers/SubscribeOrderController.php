@@ -83,7 +83,7 @@ class SubscribeOrderController extends Controller
         if ($validator->fails()) {
             return $this->returnJson($validator->errors()->first(), 400);
         }
-
-        return $this->returnSuccess(SubscribeOrder::query()->find($request->post("id")));
+        $order = SubscribeOrder::query()->with("subscribe")->find($request->post("id"));
+        return $this->returnSuccess($order);
     }
 }

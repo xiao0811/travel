@@ -18,6 +18,8 @@ class CreateRegionsTable extends Migration
             $table->string("name")->nullable()->comment("地区名");
             $table->text("content")->nullable()->comment("地区介绍");
             $table->unsignedTinyInteger("status")->nullable()->comment("1: 启用, 2: 关闭");
+            $table->string("x_axis")->nullable()->comment("X坐标");
+            $table->string("y_axis")->nullable()->comment("Y坐标");
             $table->unsignedTinyInteger("type")->nullable()->comment("类型(预留)");
             $table->string("remark")->nullable()->comment("备注");
             $table->timestamps();

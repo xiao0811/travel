@@ -28,10 +28,12 @@ class RegionController extends AdminController
 
         // $grid->column('id', __('Id'));
         $grid->column('name', __('地区'));
+        $grid->column('x_axis', __('X坐标'));
+        $grid->column('y_axis', __('Y坐标'));
         // $grid->column('content', __('Content'));
         $grid->column('status', __('状态'))->display(function ($status) {
             $data = "";
-            switch ($status){
+            switch ($status) {
                 case "1":
                     $data = "正常";
                     break;
@@ -83,6 +85,8 @@ class RegionController extends AdminController
 
         $form->text('name', __('地区'));
         $form->editor('content', __('Content'));
+        $form->text('x_axis', __('X坐标'));
+        $form->text('y_axis', __('Y坐标'));
         $form->radio('status', __('Status'))->options([
             "1" => "正常",
             "2" => "未启用"

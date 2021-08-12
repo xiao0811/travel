@@ -12,17 +12,10 @@ class TestController extends Controller
 {
     public function test()
     {
-        // $user = User::query()->find(1);
+        $user = User::query()->find(1);
 
-        // $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
-        // return $this->returnSuccess($token);
-
-        $orders = SubscribeOrder::all();
-
-        foreach ($orders as $order) {
-            $order->certificate = Carbon::now()->format("ymd") . rand(1000, 9999);
-            $order->save();
-        }
+        $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
+        return $this->returnSuccess($token);
     }
 
     public function index(Request $request)
