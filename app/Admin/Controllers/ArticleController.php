@@ -81,7 +81,7 @@ class ArticleController extends AdminController
         $form->text('subtitle', __('副标题'));
         // $form->textarea('content', __('内容'));
         $form->editor('content','内容');
-        $form->multipleImage('thumbnail', __('文章缩略图'));
+        $form->multipleImage('thumbnail', __('文章缩略图'))->removable();
         $form->text('author', __('作者'));
         // $form->number('status', __('状态'));
         $form->radio('status', __('状态'))->options([

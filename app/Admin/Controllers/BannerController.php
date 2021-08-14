@@ -27,7 +27,7 @@ class BannerController extends AdminController
         $grid = new Grid(new Banner());
 
         // $grid->column('id', __('ID'));
-        $grid->column('url', __('图片'));
+        // $grid->column('url', __('图片'));
         $grid->column('type', __('类型'));
         // $grid->column('content', __('Content'));
         $grid->column('sort', __('排序'));
@@ -63,7 +63,7 @@ class BannerController extends AdminController
     {
         $form = new Form(new Banner());
 
-        $form->multipleImage('url', __('图片'));
+        $form->multipleImage('url', __('图片'))->removable();
         $form->select('type', __('类型'))->options([
             '1' => '首页',
             '2' => '商城'

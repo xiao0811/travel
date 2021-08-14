@@ -44,8 +44,8 @@ class RegionController extends Controller
         }
         
         $subscribes = Subscribe::query()->where("place", $request->post("name"))->get();
-        $my = SubscribeOrder::query()->where("user_id", Auth::id())->whereIn("subscribe_id",$subscribes)->get();
-        $trees = SubscribeOrder::query()->whereIn("subscribe_id",$subscribes)->get();
+        $my = SubscribeOrder::query()->with("subscribe")->where("user_id", Auth::id())->whereIn("subscribe_id",$subscribes)->get();
+        $trees = SubscribeOrder::query()->with("subscribe")->whereIn("subscribe_id",$subscribes)->get();
 
         return $this->returnSuccess(["my" => $my, "trees" => $trees]);
     }

@@ -308,7 +308,7 @@ class EmissionController extends Controller
 
     public function teamRank(Request $request)
     {
-        $team = SubscribeOrder::query()->where("type", 2)->groupBy("name")
+        $team = SubscribeOrder::query()->select("name", DB::raw("sum(quantity) as quantity"))->where("type", 2)->groupBy("name")
             ->orderby("quantity")->get();
 
         return $this->returnSuccess($team);

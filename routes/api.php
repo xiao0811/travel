@@ -20,6 +20,7 @@ use App\Http\Controllers\SubscribeOrderController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\WxpayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -192,7 +193,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post("/gaode/distance", [EmissionController::class, "distance"]);
 
     Route::post("/share", [IntegralController::class, "share"]);
+
+    Route::post("/pay", [WxpayController::class, "pay"]);
 });
+
+Route::any("/wechat/pay/notify", [WxpayController::class, "notify"]);
 
 Route::get("/test", [TestController::class, "test"]);
 Route::post('/uploadFile', 'UploadsController@uploadImg');

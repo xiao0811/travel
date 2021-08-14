@@ -14,7 +14,9 @@
         "laravel-admin-ext/wang-editor": "1.*",
         "laravel/framework": "^8.40",
         "laravel/passport": "^10.1",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "overtrue/laravel-wechat": "^5.1",
+        "wechatpay/wechatpay": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -68,7 +68,7 @@ class SubscribeController extends AdminController
         $form->text('number', __('商品编号'));
         $form->text('name', __('商品名称'));
         $form->text('subtitle', __('商品副标题'));
-        $form->multipleImage('images', __('商品图片'));
+        $form->multipleImage('images', __('商品图片'))->removable();
         $form->text('price', __('单价'));
         $form->number('quantity', __('库存'));
         $form->text('valid_period', __('有效期'));
