@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Log;
 
 class BubbleController extends Controller
 {
@@ -24,9 +25,11 @@ class BubbleController extends Controller
             // $bubble->quantity = round($bubble->quantity);
             if (!isset($index[$bubble->type])) {
                 $index[$bubble->type] = $bubble->quantity;
+            } else {
+                $index[$bubble->type] += $bubble->quantity;
             }
-            $index[$bubble->type] += $bubble->quantity;
         }
+
         $data = [];
         foreach ($index as $k => $v) {
             $data[] = ["type" => $k, "quantity" => round($v)];

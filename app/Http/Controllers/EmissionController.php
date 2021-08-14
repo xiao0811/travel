@@ -80,7 +80,7 @@ class EmissionController extends Controller
                     ])->whereDate("created_at", Carbon::now()->toDateString())->first();
 
                     if (empty($ib)) {
-                        Bubble::create(Auth::id(), $integral, 1, 1);
+                        Bubble::create(Auth::id(), $integral, 3, 1);
                     } else {
                         $ib->quantity += $integral;
                         $ib->save();

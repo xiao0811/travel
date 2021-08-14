@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -22,28 +23,21 @@ class SignInController extends Controller
             "user_id" => $user->id,
             "type"    => 1,
         ])->whereDate("created_at", Carbon::today()->toDateString())->first();
-        
-        if ($today->count() > 0) {
+
+        if (!empty($today)) {
             return $this->returnJson("今天已签到", 400);
         }
 
-        $continuous = 0;
+        $continuous = 1;
 
         $integrals = Bubble::query()->where([
             "user_id" => $user->id,
             "type"    => 1,
-        ])->whereDate("created_at", ">", Carbon::today()->startOfMonth()->toDateString())
-            ->whereDate("created_at", "<", Carbon::today()->endOfMonth()->toDateString())
+        ])->whereDate("created_at", ">", Carbon::today()->addDays(-8)->toDateString())
             ->orderBy("created_at", "DESC")->get();
-
-        if (isEmpty($today)) {
-            $start = Carbon::today();
-        } else {
-            $start = Carbon::yesterday();
-        }
-
+        
         for ($i = 0; $i < $integrals->count(); $i++) {
-            if (Carbon::parse($integrals[$i]->created_at)->toDateString() == $start->addDays(-1 * $i)->toDateString()) {
+            if (Carbon::parse($integrals[$i]->created_at)->toDateString() == Carbon::yesterday()->addDays(-1 * $i)->toDateString()) {
                 $continuous++;
             } else {
                 break;
@@ -53,8 +47,8 @@ class SignInController extends Controller
         if ($continuous > 7) {
             $fen = 7;
         }
-
-        if (!Bubble::create(Auth::id(), $fen)) {
+        
+        if (!Bubble::create(Auth::id(), $fen, 1)) {
             return $this->returnJson("签到失败", 500);
         }
         return $this->returnSuccess("签到成功");

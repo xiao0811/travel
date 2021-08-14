@@ -42,7 +42,7 @@ class TestController extends Controller
 
     public function getToken()
     {
-        $user = User::query()->find(1);
+        $user = User::query()->find(23);
 
         $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
         return $this->returnSuccess($token);

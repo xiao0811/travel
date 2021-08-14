@@ -34,9 +34,36 @@ class GoodsController extends AdminController
         $grid->column('quantity', __('库存'));
         // $grid->column('images', __('Images'));
         // $grid->column('details', __('Details'));
-        $grid->column('type', __('分类'));
-        $grid->column('status', __('状态'));
-        $grid->column('recommend', __('推荐'));
+        $grid->column('type', __('分类'))->display(function ($type) {
+            $data = [
+                1 => "合肥定制",
+                2 => "商场",
+                3 => "卡券",
+                4 => "办公",
+                5 => "票务",
+                6 => "居家",
+                7 => "生活",
+                8 => "智能",
+            ];
+
+            return $data[$type];
+        });
+        $grid->column('status', __('状态'))->display(function ($status) {
+            $data = [
+                1 => "正常",
+                0 => "下架",
+            ];
+
+            return $data[$status];
+        });
+        $grid->column('recommend', __('推荐'))->display(function ($status) {
+            $data = [
+                1 => "推荐",
+                0 => "-",
+            ];
+
+            return $data[$status];
+        });
         $grid->column('sold', __('总售量'));
         $grid->column('return_integral', __('返还碳积分'));
         $grid->column('return_emission', __('返还碳减排'));
@@ -93,7 +120,7 @@ class GoodsController extends AdminController
         $form->number('integral', __('积分'));
         $form->number('quantity', __('商品数量'));
         $form->multipleImage('images', __('商品图片'))->removable();
-        $form->editor('content','内容');
+        $form->editor('content', '内容');
         $form->select('type', __('分类'))->options([
             1 => "合肥定制",
             2 => "商场",

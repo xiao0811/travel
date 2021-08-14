@@ -33,6 +33,10 @@ class OrderController extends Controller
             return $this->returnJson("超出库存", 400);
         }
 
+        if ($user->integral < $goods->integral * $number) {
+            return $this->returnJson("用户积分不够", 400);
+        }
+
         $order = new Order();
         $order->order_number = Carbon::now()->format("YmdHis") . random_int(100000, 999999);
         $order->number       = $number;
@@ -44,10 +48,26 @@ class OrderController extends Controller
         $order->status       = 1;
         $order->remark       = $request->post("remark");
 
-        if (!$order->save()) {
+        $user->integral -= $goods->integral * $number;
+        $goods->quantity -= $number;
+
+        DB::beginTransaction();
+
+        if (!$goods->save()) {
+            DB::rollBack();
             return $this->returnJson("添加失败", 500);
         }
 
+        if (!$user->save()) {
+            DB::rollBack();
+            return $this->returnJson("添加失败", 500);
+        }
+
+        if (!$order->save()) {
+            DB::rollBack();
+            return $this->returnJson("添加失败", 500);
+        }
+        DB::commit();
         return $this->returnSuccess($order);
     }
 
@@ -158,6 +178,8 @@ class OrderController extends Controller
         $asc = $request->post("asc", "desc");
         if ($request->has("order")) {
             $orders->orderBy($request->post("order"), $asc);
+        } else {
+            $orders->orderBy("created_at", $asc);
         }
 
         $limit = $request->post("limit", 20);

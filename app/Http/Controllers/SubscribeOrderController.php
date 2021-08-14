@@ -29,15 +29,17 @@ class SubscribeOrderController extends Controller
         $subscribe = Subscribe::query()->find($request->post("subscribe_id"));
 
         $order->user_id = $user->id;
+        $order->order_number = Carbon::now()->format("YmdHis") . random_int(100000, 999999);
         $order->subscribe_id = $request->post("subscribe_id");
         $order->type = $request->post("type");
         $order->subscribe_id = $request->post("subscribe_id");
+        $order->status = 1;
         $order->quantity = $request->post("quantity");
         $order->amount = $request->post("quantity") * $subscribe->price;
         $order->certificate = Carbon::now()->format("ymd") . rand(1000, 9999);
 
         if ($request->post("type") == 1) {
-            $order->name = $user->name;
+            $order->name = $request->post("name") ?? $user->username;
 
             $user->integral += $subscribe->integral;
             $user->emission += $subscribe->emission;
@@ -46,7 +48,7 @@ class SubscribeOrderController extends Controller
         }
 
         $subscribe->quantity -= $request->post("quantity");
-        $subscribe->sold += $request->post("quantity");
+        // $subscribe->sold += $request->post("quantity");
         DB::beginTransaction();
 
         if (!$order->save()) {
