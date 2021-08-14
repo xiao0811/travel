@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\Controllers\DuihuanController;
 use Illuminate\Routing\Router;
 
 Admin::routes();
@@ -41,4 +42,8 @@ Route::group([
     $router->resource('new-energies', NewEnergyController::class);
     $router->resource('sets', SetController::class);
     $router->resource('regions', RegionController::class);
+    // 兑换码
+    $router->resource('redemptions', RedemptionController::class);
+    $router->get("redemption/create", "DuihuanController@piliang");
+    $router->post("store", "DuihuanController@save");
 });
