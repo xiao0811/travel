@@ -29,6 +29,7 @@ class RedemptionController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('code', __('Code'));
+        $grid->column('integral', __('积分'));
         $grid->column('status', __('状态'))->display(function ($status) {
             $data = [
                 1 => "正常",
@@ -88,6 +89,7 @@ class RedemptionController extends AdminController
         $form = new Form(new Redemption());
 
         $form->text('code', __('Code'));
+        $form->text('integral', __('积分'));
         $form->select('status', __('Status'))->options([
             1 => "正常",
             2 => "已使用",

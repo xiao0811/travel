@@ -103,4 +103,12 @@ class ArticleController extends Controller
         $a = new Article();
         return $this->returnSuccess($a->getType());
     }
+
+    public function introduction()
+    {
+        $article = Article::query()->where("type", 4)
+            ->orderBy("created_at", "DESC")->first();
+
+        return $this->returnSuccess($article);
+    }
 }

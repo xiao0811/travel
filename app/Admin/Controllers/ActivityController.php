@@ -69,7 +69,7 @@ class ActivityController extends AdminController
         $form = new Form(new Activity());
 
         $form->text('title', __('活动标题'));
-        $form->multipleImage('cover', __('Cover'));
+        $form->multipleImage('cover', __('Cover'))->removable();
         $form->text('source', __('来源'));
         $form->date('start_time', __('开始时间'))->default(date('Y-m-d'));
         $form->date('end_time', __('结束时间'))->default(date('Y-m-d'));

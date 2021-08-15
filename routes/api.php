@@ -46,7 +46,7 @@ Route::get("/error", function () {
 Route::post('/login', [UserController::class, "login"]);
 Route::post("sign", [UserController::class, "create"]);
 
-Route::get("/token", [TestController::class, "getToken"]);
+Route::post("/token", [TestController::class, "getToken"]);
 
 Route::group(['middleware' => 'auth:api'], function () {
     // 签到
@@ -108,15 +108,17 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("update", [ArticleController::class, "update"]);
         Route::post("list", [ArticleController::class, "list"]);
         Route::post("details", [ArticleController::class, "details"]);
+        Route::post("introduction", [ArticleController::class, "introduction"]);
     });
 
     // Question 问题
     Route::group(["prefix" => "question"], function () {
         Route::post("get", [QuestionController::class, "randOne"]);
         Route::post("submit", [QuestionController::class, "submit"]);
+        Route::post("today", [QuestionController::class, "today"]);
     });
 
-    // article / Article 文章
+    // 用户地址
     Route::group(["prefix" => "address"], function () {
         Route::post("create", [AddressController::class, "create"]);
         Route::post("update", [AddressController::class, "update"]);

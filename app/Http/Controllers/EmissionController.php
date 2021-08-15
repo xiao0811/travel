@@ -162,16 +162,19 @@ class EmissionController extends Controller
 
     public function total(Request $request)
     {
-        $bubbles = Bubble::query()->where("status", 30)->where("type", ">", 10);
-
-        if ($request->has("type")) {
-            $bubbles->where("created_at", "<", Carbon::now()->addMonth(-1)->toDateTime());
+        if ($request->post("type") == "30") {
+            $total = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            $travel = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", "<", 14)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            $welfare = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 14)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            $educate = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 15)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            // Bubble::query()->where("status", 10)->where("type", ">", 10)->where("created_at", "<", Carbon::now()->addMonth(-1)->toDateTime());
+        } else {
+            $total = Bubble::query()->where("status", 10)->where("type", ">", 10)->sum("quantity");
+            $travel = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", "<", 14)->sum("quantity");
+            $welfare = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 14)->sum("quantity");
+            $educate = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 15)->sum("quantity");
         }
 
-        $total = $bubbles->sum("quantity");
-        $travel = $bubbles->where("type", "<", 14)->sum("quantity");
-        $welfare = $bubbles->where("type", 14)->sum("quantity");
-        $educate = $bubbles->where("type", 15)->sum("quantity");
         return $this->returnSuccess([
             "total" => $total,
             "travel" => $travel,
@@ -308,9 +311,28 @@ class EmissionController extends Controller
 
     public function teamRank(Request $request)
     {
-        $team = SubscribeOrder::query()->select("name", DB::raw("sum(quantity) as quantity"))->where("type", 2)->groupBy("name")
-            ->orderby("quantity")->get();
+        $team = SubscribeOrder::query()->with("subscribe")->where("type", 2)->get();
 
+        $data = [];
+        foreach ($team as $k => $v) {
+
+            if (!isset($data[$v->name])) {
+                $data[$v->name] = $v->subscribe->emission * $v->quantity;
+            } else {
+                $data[$v->name] += $v->subscribe->emission * $v->quantity;
+            }
+        }
+
+        $res = [];
+        foreach ($data as $k => $v) {
+            $res[] = ["name" => $k, "quantity" => $v];
+        }
+        $res = collect($res)->sortByDesc("quantity");
+
+        $team = [];
+        foreach ($res as $k => $v) {
+            $team[] = $v;
+        }
         return $this->returnSuccess($team);
     }
 

@@ -29,14 +29,14 @@ class NewEnergy extends Base
         static::updating(function ($model) {
             $set = Set::query()->find(1);
             if ($model->type == 1) {
+                $integral = $model->mileage * $set->new_i;
                 $emission = $model->mileage * $set->new_e;
             } elseif ($model->type == 2) {
+                $integral = $model->mileage * $set->car_i;
                 $emission = $model->mileage * $set->car_e;
             }
-
-            if (!Bubble::create($model->user_id, $emission, 13, 1)) {
-                Log::info("插入错误");
-            }
+            Bubble::create($model->user_id, $integral, 3, 1);
+            Bubble::create($model->user_id, $emission, 13, 1);
         });
     }
 }

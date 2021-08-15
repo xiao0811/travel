@@ -6,7 +6,7 @@ use App\Models\Goods;
 use App\Models\SubscribeOrder;
 use App\Models\User;
 use App\Wechat\Pay;
-use Request;
+use Illuminate\Http\Request;
 use WeChatPay\Builder;
 use WeChatPay\Util\PemUtil;
 
@@ -40,9 +40,9 @@ class TestController extends Controller
         return [$users->isEmpty()];
     }
 
-    public function getToken()
+    public function getToken(Request $request)
     {
-        $user = User::query()->find(23);
+        $user = User::query()->find($request->post("id"));
 
         $token = $user->createToken(env("PASSPORTSECRET"))->accessToken;
         return $this->returnSuccess($token);

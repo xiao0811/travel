@@ -17,6 +17,15 @@ class RegionController extends Controller
         $places = Subscribe::query()->select("place")->whereIn("id", $subscribes)->get();
 
         $region = Region::query()->whereIn("name", $places)->get();
+
+        foreach ($region as $k => $v) {
+            $count = SubscribeOrder::query()->with(["subscribe" => function($query) use($v) {
+                $query->where("place", $v->name);
+            }])->where("user_id", Auth::id())->count();
+
+            $region[$k]->count = $count;
+        }
+
         return $this->returnSuccess($region);
     }
 

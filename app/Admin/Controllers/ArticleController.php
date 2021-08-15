@@ -32,7 +32,16 @@ class ArticleController extends AdminController
         // $grid->column('content', __('Content'));
         $grid->column('author', __('作者'));
         $grid->column('status', __('状态'));
-        $grid->column('type', __('类型'));
+        $grid->column('type', __('类型'))->display(function ($type) {
+            $data = [
+                '1' => '合肥资讯',
+                '2' => '安徽资讯',
+                "3" => "国内资讯",
+                "4" => "积分攻略",
+                "5" => "碳积分简介",
+            ];
+            return $data[$type];
+        });
         $grid->column('view', __('阅读量'));
         $grid->column('like', __('点赞数'));
         $grid->column('sort', __('排序'));
@@ -80,7 +89,7 @@ class ArticleController extends AdminController
         $form->text('title', __('标题'));
         $form->text('subtitle', __('副标题'));
         // $form->textarea('content', __('内容'));
-        $form->editor('content','内容');
+        $form->editor('content', '内容');
         $form->multipleImage('thumbnail', __('文章缩略图'))->removable();
         $form->text('author', __('作者'));
         // $form->number('status', __('状态'));
@@ -93,6 +102,8 @@ class ArticleController extends AdminController
             '1' => '合肥资讯',
             '2' => '安徽资讯',
             "3" => "国内资讯",
+            "4" => "积分攻略",
+            "5" => "碳积分简介",
         ])->default(1);
         $form->number('sort', __('Sort'))->default(1);
 

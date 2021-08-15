@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Bubble;
 use App\Models\Integral;
+use App\Models\Redemption;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class IntegralController extends Controller
@@ -101,10 +103,10 @@ class IntegralController extends Controller
     {
         $integral = Bubble::query()->where([
             "user_id" => Auth::id(),
-            "status" => 30
+            "status" => 10
         ])->where("type", "<", 10)->sum("quantity");
 
-        return $this->returnSuccess($integral);
+        return $this->returnSuccess(round($integral));
     }
 
     public function log(Request $request)
@@ -114,13 +116,21 @@ class IntegralController extends Controller
             $month = Carbon::now()->addMonth(-1 * $i)->format("m");
             $is = Bubble::query()->where([
                 "user_id" => Auth::id(),
-                "status"  => 30
+                "status"  => 10
             ])->whereMonth("created_at", $month)->get();
             if ($is->count() > 0) {
-                $data = ["integral" => $is, "month" => $month];
+                $ri = [];
+                foreach ($is as $k=>$v) {
+                    $ri[$k]["quantity"] = round($v->quantity);
+                    $ri[$k]["created_at"] = Carbon::parse($v->created_at)->toDateString();
+                }
+
+                $data = ["integral" => $ri, "month" => $month];
                 $integrals[] = $data;
             }
         }
+
+
 
         return $this->returnSuccess($integrals);
     }
@@ -135,12 +145,19 @@ class IntegralController extends Controller
             return $this->returnJson($validator->errors()->first(), 400);
         }
 
-        if ($request->post("code") != "123456") {
+        $code = Redemption::query()->where([
+            "code"   => $request->post("code"),
+            "status" => 1
+        ])
+            ->where("valid_period", ">", Carbon::now()->toDateTimeString())->first();
+
+        if (empty($code)) {
             return $this->returnJson("改兑换码无效", 400);
         }
 
-        Bubble::create(Auth::id(), 10, 6, 1);
-
+        Bubble::create(Auth::id(), $code->integral, 5, 1);
+        $code->status = 2;
+        $code->save();
         return $this->returnSuccess("兑换成功");
     }
 

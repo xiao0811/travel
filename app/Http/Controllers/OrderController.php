@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Goods;
 use App\Models\Integral;
 use App\Models\Order;
@@ -28,6 +29,7 @@ class OrderController extends Controller
 
         $number = $request->post("number");
         $goods = Goods::query()->find($request->post("goods_id"));
+        $address = Address::query()->find($request->post("addr_id"));
         $user = Auth::user();
         if ($number > $goods->quantity) {
             return $this->returnJson("超出库存", 400);
@@ -42,9 +44,9 @@ class OrderController extends Controller
         $order->number       = $number;
         $order->member_id    = $user->id;
         $order->goods_id     = $request->post("goods_id");
-        $order->address      = $request->post("address");
-        $order->name         = $request->post("name");
-        $order->phone        = $request->post("phone");
+        $order->address      = $address->address ?? "";
+        $order->name         = $address->name ?? "";
+        $order->phone        = $address->phone ?? "";
         $order->status       = 1;
         $order->remark       = $request->post("remark");
 
