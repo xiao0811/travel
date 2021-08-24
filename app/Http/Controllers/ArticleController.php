@@ -46,7 +46,7 @@ class ArticleController extends Controller
 
     public function list(Request $request)
     {
-        $articles = Article::query();
+        $articles = Article::query()->where("type", "<", "10");
 
         if ($request->has("title")) {
             $articles->where("title", "LIKE", "%" . $request->post("title") . "%");
@@ -106,7 +106,15 @@ class ArticleController extends Controller
 
     public function introduction()
     {
-        $article = Article::query()->where("type", 4)
+        $article = Article::query()->where("type", 11)
+            ->orderBy("created_at", "DESC")->first();
+
+        return $this->returnSuccess($article);
+    }
+
+    public function about()
+    {
+        $article = Article::query()->where("type", 12)
             ->orderBy("created_at", "DESC")->first();
 
         return $this->returnSuccess($article);

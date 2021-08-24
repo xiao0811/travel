@@ -8,21 +8,24 @@ use App\Models\SubscribeOrder;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Log;
 
 class RegionController extends Controller
 {
     public function list(Request $request)
     {
-        $subscribes = SubscribeOrder::query()->where("user_id", Auth::id())->get();
+        $subscribes = SubscribeOrder::query()->select("subscribe_id")->where("user_id", Auth::id())->get();
+        Log::info($subscribes);
+
         $places = Subscribe::query()->select("place")->whereIn("id", $subscribes)->get();
+        Log::info($places);
 
         $region = Region::query()->whereIn("name", $places)->get();
-
         foreach ($region as $k => $v) {
-            $count = SubscribeOrder::query()->with(["subscribe" => function($query) use($v) {
-                $query->where("place", $v->name);
-            }])->where("user_id", Auth::id())->count();
+            $subscribes = Subscribe::query()->select("id")->where("place", $v->name)->get();
 
+            $count = SubscribeOrder::query()->where("user_id", Auth::id())
+                ->whereIn("subscribe_id", $subscribes)->count();
             $region[$k]->count = $count;
         }
 
@@ -51,10 +54,10 @@ class RegionController extends Controller
         if ($validator->fails()) {
             return $this->returnJson($validator->errors()->first(), 400);
         }
-        
+
         $subscribes = Subscribe::query()->where("place", $request->post("name"))->get();
-        $my = SubscribeOrder::query()->with("subscribe")->where("user_id", Auth::id())->whereIn("subscribe_id",$subscribes)->get();
-        $trees = SubscribeOrder::query()->with("subscribe")->whereIn("subscribe_id",$subscribes)->get();
+        $my = SubscribeOrder::query()->with("subscribe")->where("user_id", Auth::id())->whereIn("subscribe_id", $subscribes)->get();
+        $trees = SubscribeOrder::query()->with("subscribe")->whereIn("subscribe_id", $subscribes)->get();
 
         return $this->returnSuccess(["my" => $my, "trees" => $trees]);
     }

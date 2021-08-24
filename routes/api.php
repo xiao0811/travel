@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post("list", [ArticleController::class, "list"]);
         Route::post("details", [ArticleController::class, "details"]);
         Route::post("introduction", [ArticleController::class, "introduction"]);
+        Route::post("about", [ArticleController::class, "about"]);
     });
 
     // Question 问题

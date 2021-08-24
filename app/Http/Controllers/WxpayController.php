@@ -9,9 +9,7 @@ use App\Models\Subscribe;
 use App\Models\SubscribeOrder;
 use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
-use Log;
 use Overtrue\LaravelWeChat\Facade;
 
 class WxpayController extends Controller

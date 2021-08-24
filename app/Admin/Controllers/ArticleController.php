@@ -37,8 +37,8 @@ class ArticleController extends AdminController
                 '1' => '合肥资讯',
                 '2' => '安徽资讯',
                 "3" => "国内资讯",
-                "4" => "积分攻略",
-                "5" => "碳积分简介",
+                "11" => "积分攻略",
+                "12" => "碳积分简介",
             ];
             return $data[$type];
         });
@@ -102,8 +102,8 @@ class ArticleController extends AdminController
             '1' => '合肥资讯',
             '2' => '安徽资讯',
             "3" => "国内资讯",
-            "4" => "积分攻略",
-            "5" => "碳积分简介",
+            "11" => "积分攻略",
+            "12" => "碳积分简介",
         ])->default(1);
         $form->number('sort', __('Sort'))->default(1);
 

@@ -53,6 +53,10 @@ class OrderController extends Controller
         $user->integral -= $goods->integral * $number;
         $goods->quantity -= $number;
 
+        if ($goods->price == 0) {
+            $order->status = 2;
+        }
+
         DB::beginTransaction();
 
         if (!$goods->save()) {

@@ -81,7 +81,7 @@ class CollectController extends Controller
 
     public function list(Request $request)
     {
-        $collects = Collect::query()->where("status", 1);
+        $collects = Collect::query()->where("user_id", Auth::id())->where("status", 1);
         return $this->returnSuccess($collects->paginate(10));
     }
 }
