@@ -91,7 +91,7 @@ class GoodsController extends AdminController
         $show->field('integral', __('积分'));
         $show->field('quantity', __('商品数量'));
         $show->multipleImage('images', __('商品图片'));
-        $show->field('details', __('商品详情'));
+        $show->field('content', __('商品详情'));
         $show->field('type', __('分类'));
         $show->field('status', __('状态'));
         $show->field('recommend', __('是否推荐'));
