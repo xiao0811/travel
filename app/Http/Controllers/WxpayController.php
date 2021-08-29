@@ -10,6 +10,7 @@ use App\Models\SubscribeOrder;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Log;
 use Overtrue\LaravelWeChat\Facade;
 
 class WxpayController extends Controller
@@ -25,12 +26,22 @@ class WxpayController extends Controller
             return $this->returnJson($validator->errors()->first(), 400);
         }
 
+        if ($request->post("type") == 1) {
+            $order = Order::query()->where("order_number", $request->post("order"))->first();
+            $goods = Goods::query()->find($order->goods_id);
+            $total_fee = $goods->price * $order->number;
+        } elseif ($request->post("type") == 2) {
+            $order = SubscribeOrder::query()->where("order_number", $request->post("order"))->first();
+            $goods = Subscribe::query()->find($order->subscribe_id);
+            $total_fee = $goods->price * $order->quantity;
+        }
+
         $payment = Facade::payment(); // 微信支付
         $result = $payment->order->unify([
             "body"         => "订单支付",
             "openid"       => Auth::user()->wechat,
             "attach"       => $request->post("type"),
-            "total_fee"    => 1,
+            "total_fee"    => round($total_fee * 100),
             "trade_type"   => "JSAPI",
             "out_trade_no" => $request->post("order"),
         ]);
@@ -43,6 +54,7 @@ class WxpayController extends Controller
         $payment = Facade::payment();
         // 订单状态 1: 下单未付款, 2: 付款未发货, 3: 发货未签收, 4: 已完成, 10: 取消
         $response = $payment->handleRefundedNotify(function ($notify, $fail) {
+            Log::info($notify);
             if ($notify['return_code'] === 'SUCCESS' && $notify['result_code'] === 'SUCCESS') {
                 if ($notify["attach"] == 1) { // 普通商品
                     $order = Order::query()->where("order_number", $notify["out_trade_no"])->first();

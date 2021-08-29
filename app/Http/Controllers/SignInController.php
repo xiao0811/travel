@@ -73,9 +73,9 @@ class SignInController extends Controller
         $continuous = 0;
 
         if (isEmpty($today)) {
-            $start = Carbon::today();
-        } else {
             $start = Carbon::yesterday();
+        } else {
+            $start = Carbon::today();
         }
 
         for ($i = 0; $i < $integrals->count(); $i++) {

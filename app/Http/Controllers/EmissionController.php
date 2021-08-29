@@ -163,16 +163,16 @@ class EmissionController extends Controller
     public function total(Request $request)
     {
         if ($request->post("type") == "30") {
-            $total = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
-            $travel = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", "<", 14)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
-            $welfare = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 14)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
-            $educate = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 15)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            $total = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->where("type", ">", 10)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            $travel = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->where("type", ">", 10)->where("type", "<", 14)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            $welfare = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->where("type", ">", 10)->where("type", 14)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
+            $educate = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->where("type", ">", 10)->where("type", 15)->where("created_at", ">", Carbon::now()->addMonth(-1)->toDateTimeString())->sum("quantity");
             // Bubble::query()->where("status", 10)->where("type", ">", 10)->where("created_at", "<", Carbon::now()->addMonth(-1)->toDateTime());
         } else {
-            $total = Bubble::query()->where("status", 10)->where("type", ">", 10)->sum("quantity");
-            $travel = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", "<", 14)->sum("quantity");
-            $welfare = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 14)->sum("quantity");
-            $educate = Bubble::query()->where("status", 10)->where("type", ">", 10)->where("type", 15)->sum("quantity");
+            $total = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->sum("quantity");
+            $travel = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->where("type", ">", 10)->where("type", "<", 14)->sum("quantity");
+            $welfare = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->where("type", ">", 10)->where("type", 14)->sum("quantity");
+            $educate = Bubble::query()->where("user_id", Auth::id())->where("status", 10)->where("type", ">", 10)->where("type", 15)->sum("quantity");
         }
 
         return $this->returnSuccess([

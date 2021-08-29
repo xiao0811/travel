@@ -40,9 +40,6 @@ class SubscribeOrderController extends Controller
 
         if ($request->post("type") == 1) {
             $order->name = $request->post("name") ?? $user->username;
-
-            $user->integral += $subscribe->integral;
-            $user->emission += $subscribe->emission;
         } else if ($request->post("type") == 2) {
             $order->name = $request->post("name");
         }
