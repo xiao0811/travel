@@ -18,6 +18,7 @@ class BubbleController extends Controller
     {
         $bubbles = Bubble::query()->where("user_id", Auth::id())->where("status", 1)
             ->where("created_at", "<", Carbon::tomorrow()->toDateTimeString())
+            ->where("type", "<", 20)
             ->where("quantity", ">", 0)->get();
 
         $index = [];

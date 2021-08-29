@@ -2,36 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Goods;
-use App\Models\SubscribeOrder;
+use App\Models\Bubble;
 use App\Models\User;
-use App\Wechat\Pay;
+use Auth;
 use Illuminate\Http\Request;
-use WeChatPay\Builder;
-use WeChatPay\Util\PemUtil;
+use Illuminate\Support\Carbon;
 
 
 class TestController extends Controller
 {
     public function test()
     {
-        $instance = Pay::instance();
+        $bubbles = Bubble::query()->whereDate("created_at", Carbon::today())->where("type", ">", 10)->get();
 
-        $resp = $instance
-            ->v3->pay->transactions->native
-            ->post(['json' => [
-                'mchid'        => env("WECHATMERCHANID"),
-                'out_trade_no' => 'native12177525012014070332333',
-                'appid'        => env("WECHATAPPID"),
-                'description'  => 'Image形象店-深圳腾大-QQ公仔',
-                'notify_url'   => 'https://weixin.qq.com/',
-                'amount'       => [
-                    'total'    => 1,
-                    'currency' => 'CNY'
-                ],
-            ]]);
+        $data = [];
+        foreach ($bubbles as $bubble) {
+            if (!isset($data[$bubble->user_id])) {
+                $data[$bubble->user_id] = $bubble->quantity;
+            } else {
+                $data[$bubble->user_id] += $bubble->quantity;
+            }
+        }
+        $a = [];
+        foreach ($data as $k => $v) {
+            $a[] = ["user_id" => $k, "quantity" => $v];
+        }
+        $users = collect($a)->sortByDesc("quantity");
 
-        return $this->returnSuccess($resp->getBody()->getContent());
+        $res = [];
+        $i = 1;
+
+        $self = User::query()->find(Auth::id());
+
+        foreach ($users as $v) {
+            if ($v["user_id"] == Auth::id()) {
+                $self->rank = $i;
+            }
+            $i++;
+
+            $user = User::query()->find($v["user_id"]);
+            $user->emission = $v["quantity"];
+            $res[] = $user;
+        }
+
+        return $this->returnSuccess(["self" => $self, "user" => $res]);
     }
 
     public function index(Request $request)

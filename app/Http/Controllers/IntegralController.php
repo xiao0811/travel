@@ -90,6 +90,9 @@ class IntegralController extends Controller
     public function cleared(Request $request)
     {
         $user = Auth::user();
+
+        // 记录
+        Bubble::create(Auth::id(), $user->integral, 20);
         $user->integral = 0;
 
         if (!$user->save()) {
@@ -106,7 +109,12 @@ class IntegralController extends Controller
             "status" => 10
         ])->where("type", "<", 10)->sum("quantity");
 
-        return $this->returnSuccess(round($integral));
+        $zhuxiao = Bubble::query()->where([
+            "user_id" => Auth::id(),
+            "type" => 20
+        ])->sum("quantity");
+
+        return $this->returnSuccess(round($integral - $zhuxiao));
     }
 
     public function log(Request $request)
@@ -114,13 +122,14 @@ class IntegralController extends Controller
         $integrals = [];
         for ($i = 0; $i < 12; $i++) {
             $month = Carbon::now()->addMonth(-1 * $i)->format("m");
-            $is = Bubble::query()->where([
+            $is = Bubble::query()->where("type", "<", 10)->where([
                 "user_id" => Auth::id(),
-                "status"  => 10
+                "status"  => 10,
+
             ])->whereMonth("created_at", $month)->get();
             if ($is->count() > 0) {
                 $ri = [];
-                foreach ($is as $k=>$v) {
+                foreach ($is as $k => $v) {
                     $ri[$k]["quantity"] = round($v->quantity);
                     $ri[$k]["created_at"] = Carbon::parse($v->created_at)->toDateString();
                 }
@@ -129,8 +138,6 @@ class IntegralController extends Controller
                 $integrals[] = $data;
             }
         }
-
-
 
         return $this->returnSuccess($integrals);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\Bubble;
 use App\Models\Goods;
 use App\Models\Integral;
 use App\Models\Order;
@@ -68,6 +69,8 @@ class OrderController extends Controller
             DB::rollBack();
             return $this->returnJson("添加失败", 500);
         }
+
+        Bubble::create(Auth::id(), $goods->integral * $number, 20);
 
         if (!$order->save()) {
             DB::rollBack();

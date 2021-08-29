@@ -293,20 +293,43 @@ class EmissionController extends Controller
 
     public function todayRank(Request $request)
     {
-        $users = User::query()->where("emission", ">", 0)
-            ->orderBy("emission", "DESC")->get();
+        $bubbles = Bubble::query()->whereDate("created_at", Carbon::today())->where("type", ">", 10)->get();
 
-        $i = 1;
-        foreach ($users as $v) {
-            if ($v->id == Auth::id()) {
-                break;
+        $data = [];
+        foreach ($bubbles as $bubble) {
+            if (!isset($data[$bubble->user_id])) {
+                $data[$bubble->user_id] = $bubble->quantity;
+            } else {
+                $data[$bubble->user_id] += $bubble->quantity;
             }
-            $i++;
         }
+        $a = [];
+        foreach ($data as $k => $v) {
+            $a[] = ["user_id" => $k, "quantity" => $v];
+        }
+        $users = collect($a)->sortByDesc("quantity");
+
+        $res = [];
+        $i = 1;
 
         $self = User::query()->find(Auth::id());
-        $self->rank = $i;
-        return $this->returnSuccess(["self" => $self, "user" => $users]);
+        $self->rank = "未上榜";
+        $self->emission = 0;
+        foreach ($users as $v) {
+            $user = User::query()->find($v["user_id"]);
+           
+            Log::info([$v["user_id"], Auth::id(), $v["user_id"] == Auth::id()]);
+            if ($v["user_id"] == Auth::id()) {
+                $self->rank = $i;
+                $self->emission = round($v["quantity"]);
+            }
+            $i++;
+
+            $user->emission = round($v["quantity"]);
+            $res[] = $user;
+        }
+
+        return $this->returnSuccess(["self" => $self, "user" => $res]);
     }
 
     public function teamRank(Request $request)

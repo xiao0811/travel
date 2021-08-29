@@ -68,6 +68,7 @@ class WxpayController extends Controller
                             "message" => "成功"
                         ]);
                     }
+
                 } else if ($notify["attach"] == 2) { // 认购商品
                     $order = SubscribeOrder::query()->where("order_number", $notify["out_trade_no"])->first();
                     $subscribe = Subscribe::query()->where("id", $order->subscribe_id)->first();

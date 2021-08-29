@@ -77,6 +77,8 @@ class SubscribeOrderController extends Controller
     {
         $validator = Validator::make($request->post(), [
             "id" => "required|exists:subscribe_orders,id",
+        ], [
+            "id.exists" => "订单ID不存在"
         ]);
 
         if ($validator->fails()) {
